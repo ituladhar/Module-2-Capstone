@@ -14,5 +14,6 @@ public interface TransferDao {
     void updateTransfer(Transfer transfer);
     void updateBalance(Transfer transfer);
     void rejectRequest(Transfer transfer);
+    void acceptRequest(Transfer transfer);
 
 }

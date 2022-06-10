@@ -3,23 +3,39 @@ package com.techelevator.tenmo.dao;
 import com.techelevator.tenmo.model.Account;
 import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.tenmo.model.TransferStatus;
+import com.techelevator.tenmo.model.TransferType;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 public class JdbcTransferDao implements TransferDao{
     public JdbcTemplate jdbcTemplate;
 
     @Override
     public void transferMoney(Transfer transfer) {
+        checkUserExists(transfer.getAccountFromId());
+        checkUserExists(transfer.getAccountToId());
 
+        String sql = "UPDATE account SET balance = (balance - ?) " +
+                "WHERE user_id = ?;";
+        jdbcTemplate.update(sql, transfer.getAmount(), transfer.getAccountFromId());                   // TODO use created update balance instead
+
+        sql = "UPDATE account SET balance = (balance + ?) " +
+                "WHERE user_id = ?;";
+        jdbcTemplate.update(sql, transfer.getAmount(), transfer.getAccountToId());
+
+        transfer.setTransferTypeId(TransferType.SEND);
+        transfer.setTransferStatusId(TransferStatus.APPROVED);
+
+        createTransfer(transfer);
     }
 
     @Override
     public void viewTransfers(int id) {
-
-
     }
 
     @Override
@@ -71,18 +87,6 @@ public class JdbcTransferDao implements TransferDao{
         jdbcTemplate.update(sql, transfer.getAmount(), transfer.getAccountToId());
     }
 
-    private int findAccountByUserId(long id) {
-        Account account = new Account();
-        String sql = "SELECT account_id " +
-                "FROM account " +
-                "WHERE user_id = ?;";
-
-        SqlRowSet rowSet = jdbcTemplate.queryForRowSet(sql, id);
-        if (rowSet.next()) {
-            account.setAccountId(rowSet.getInt("account_id"));
-        }
-        return account.getAccountId();
-    }
     @Override
     public void rejectRequest(Transfer transfer){
         String sql = "UPDATE transfer  " +
@@ -92,6 +96,13 @@ public class JdbcTransferDao implements TransferDao{
                 transfer.getAccountToId());
 
     }
+    @Override
+    public void acceptRequest(Transfer transfer){
+        setTransferStatusToApproved(transfer);
+        subtractAmountFromSender(transfer);
+        addAmountToRequester(transfer);
+    }
+
 
     private Transfer mapTransferToRowSet(SqlRowSet rowSet) {
         Transfer transfer = new Transfer();
@@ -104,6 +115,31 @@ public class JdbcTransferDao implements TransferDao{
         transfer.setAmount(rowSet.getBigDecimal("amount"));
 
         return transfer;
+    }
+
+// Additional methods to check transfers
+
+    private int findAccountByUserId(long id) {
+        Account account = new Account();
+        String sql = "SELECT account_id " +
+                "FROM account " +
+                "WHERE user_id = ?;";
+
+        SqlRowSet rowSet = jdbcTemplate.queryForRowSet(sql, id);
+        if (rowSet.next()) {
+            account.setAccountId(rowSet.getInt("account_id"));
+        }
+        return account.getAccountId();
+    }
+
+    private void checkUserExists(long userId) {
+        String sql = "SELECT user_id, username FROM tenmo_user WHERE user_id = ?;";
+
+        SqlRowSet rowSet = jdbcTemplate.queryForRowSet(sql, userId);
+
+        if (!rowSet.next()) {
+            throw new UsernameNotFoundException("UserId " + userId + " was not found");
+        }
     }
 
     private void addAmountToRequester(Transfer transfer){
