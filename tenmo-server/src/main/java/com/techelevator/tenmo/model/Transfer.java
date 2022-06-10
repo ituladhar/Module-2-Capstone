@@ -15,6 +15,14 @@ public class Transfer {
     private long fromUserId;
     private long toUserId;
 
+    public int getTransferId() {
+        return transferId;
+    }
+
+    public void setTransferId(int transferId) {
+        this.transferId = transferId;
+    }
+
     public int getTransferTypeId() {
         return transferTypeId;
     }

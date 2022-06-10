@@ -10,7 +10,7 @@ public interface TransferDao {
     void viewPendingTransfer(int id);
     BigDecimal sendTransfer(int id);
     BigDecimal requestTransfer (Transfer transfer);
-    void createTransfer(Transfer transfer);
+    Transfer createTransfer(Transfer transfer);
     void updateTransfer(Transfer transfer);
     void updateBalance(Transfer transfer);
     void rejectRequest(Transfer transfer);

@@ -54,14 +54,15 @@ public class JdbcTransferDao implements TransferDao{
     }
 
     @Override
-    public BigDecimal requestTransfer(int id) {
-        return null;
-    }
+    public Transfer createTransfer(Transfer transfer) {
+        transfer.setAccountFromId(findAccountByUserId(transfer.getAccountFromId()));
+        transfer.setAccountToId(findAccountByUserId(transfer.getAccountToId()));
+        String sql = "INSERT INTO transfer (transfer_type_id, transfer_status_id, account_from, account_to, amount) " +
+                "VALUES (?, ?, ?, ?, ?) returning transfer_id;";
 
-
-    @Override
-    public void createTransfer(Transfer transfer) {
-
+        transfer.setTransferId(jdbcTemplate.queryForObject(sql, Integer.class, transfer.getTransferTypeId(),
+                transfer.getTransferStatusId(), transfer.getAccountFromId(), transfer.getAccountToId(), transfer.getAmount()));
+        return transfer;
     }
 
 
