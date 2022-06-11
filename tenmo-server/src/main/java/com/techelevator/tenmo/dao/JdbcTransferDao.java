@@ -63,6 +63,8 @@ public class JdbcTransferDao implements TransferDao{
         throw new TransferNotFoundException("Error. No such transfer exists or you do not have permission to view it.");
     }
 
+
+
     @Override
     public List<Transfer> viewPendingTransfer(int id) throws TransferNotFoundException {
         List<Transfer> pendingTransfers = new ArrayList<>();
@@ -89,17 +91,19 @@ public class JdbcTransferDao implements TransferDao{
 
 
 
-/*
-    @Override
-    public BigDecimal sendTransfer(int id) {
-        return null;
-    }
+//    @Override
+//    public Transfer sendMoneyByTransfer(BigDecimal amountToSend, int id) {
+//
+//        return null;
+//    }
+//
+//    @Override
+//    public Transfer requestMoneyByTransfer(Transfer transfer) {
+//        return null;
+//    }
 
-    @Override
-    public BigDecimal requestTransfer(Transfer transfer) {
-        return null;
-    }
-*/
+
+
 
     @Override
     public Transfer createTransfer(Transfer transfer) {
@@ -114,6 +118,8 @@ public class JdbcTransferDao implements TransferDao{
     }
 
 
+
+
     @Override
     public void updateTransfer(Transfer transfer) {
         String sql = "UPDATE transfer " +
@@ -122,6 +128,7 @@ public class JdbcTransferDao implements TransferDao{
         jdbcTemplate.update(sql, transfer.getTransferStatusId(), transfer.getTransferId());
 
     }
+
 
     @Override
     public void updateBalance(Transfer transfer) {
@@ -136,6 +143,8 @@ public class JdbcTransferDao implements TransferDao{
         jdbcTemplate.update(sql, transfer.getAmount(), transfer.getAccountToId());
     }
 
+
+
     @Override
     public void rejectRequest(Transfer transfer){
         String sql = "UPDATE transfer  " +
@@ -145,6 +154,8 @@ public class JdbcTransferDao implements TransferDao{
                 transfer.getAccountToId());
 
     }
+
+
     @Override
     public void acceptRequest(Transfer transfer){
         setTransferStatusToApproved(transfer);
@@ -202,6 +213,7 @@ public class JdbcTransferDao implements TransferDao{
             throw new UsernameNotFoundException("UserId " + userId + " was not found");
         }
     }
+
 
     private void addAmountToRequester(Transfer transfer){
         String sql = "UPDATE account  " +

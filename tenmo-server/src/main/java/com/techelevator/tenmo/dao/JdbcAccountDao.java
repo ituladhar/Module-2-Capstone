@@ -21,6 +21,7 @@ public class JdbcAccountDao implements AccountDao {
         return balance;
     }
 
+
     private Account mapRowToAccount(SqlRowSet rowSet) {
         Account account = new Account();
         account.setAccountId(rowSet.getInt("account_id"));
