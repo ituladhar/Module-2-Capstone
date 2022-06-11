@@ -89,6 +89,7 @@ public class JdbcTransferDao implements TransferDao{
 
 
 
+/*
     @Override
     public BigDecimal sendTransfer(int id) {
         return null;
@@ -98,11 +99,7 @@ public class JdbcTransferDao implements TransferDao{
     public BigDecimal requestTransfer(Transfer transfer) {
         return null;
     }
-
-
-
-
-
+*/
 
     @Override
     public Transfer createTransfer(Transfer transfer) {
