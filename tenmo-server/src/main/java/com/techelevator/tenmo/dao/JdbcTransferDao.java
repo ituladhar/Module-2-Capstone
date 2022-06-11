@@ -8,11 +8,12 @@ import com.techelevator.tenmo.model.TransferType;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-
+import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+@Component // constructor in com.techelevator.tenmo.controller.TenmoController required a bean of type 'com.techelevator.tenmo.dao.TransferDao' that could not be found.
 public class JdbcTransferDao implements TransferDao{
     public JdbcTemplate jdbcTemplate;
     Boolean getRowSet = false;
@@ -37,10 +38,9 @@ public class JdbcTransferDao implements TransferDao{
     }
 
     @Override
-    public List<Transfer> viewTransfers(int id) throws TransferNotFoundException {
+    public List<Transfer> viewTransfers(int userId) throws TransferNotFoundException {
         List<Transfer> transfers = new ArrayList<>();
 
-        boolean gotRowSet = false;
         String sql = "SELECT transfer_id, transfer_type_desc, transfer_status_desc, account_from, account_to, amount " +
                 "FROM transfer " +
                 "JOIN transfer_type ON transfer.transfer_type_id = transfer_type.transfer_type_id " +
@@ -48,16 +48,16 @@ public class JdbcTransferDao implements TransferDao{
                 "JOIN account ON transfer.account_from = account.account_id OR transfer.account_to = account.account_id " +
                 "WHERE user_id = ?;";
 
-        SqlRowSet rowSet = jdbcTemplate.queryForRowSet(sql, id);
+        SqlRowSet rowSet = jdbcTemplate.queryForRowSet(sql, userId);
         while (rowSet.next()) {
-            gotRowSet = true;
+            getRowSet = true;
             Transfer transfer = mapTransferToRowSet(rowSet);
             transfer.setAccountFromUsername(getUserRowSet(transfer.getAccountFromId()).getString("username"));
             transfer.setAccountToUsername(getUserRowSet(transfer.getAccountToId()).getString("username"));
 
             transfers.add(transfer);
         }
-        if (gotRowSet) {
+        if (getRowSet) {
             return transfers;
         }
         throw new TransferNotFoundException("Error. No such transfer exists or you do not have permission to view it.");
@@ -66,7 +66,7 @@ public class JdbcTransferDao implements TransferDao{
 
 
     @Override
-    public List<Transfer> viewPendingTransfer(int id) throws TransferNotFoundException {
+    public List<Transfer> viewPendingTransfer(int userId) throws TransferNotFoundException {
         List<Transfer> pendingTransfers = new ArrayList<>();
         String sql = "SELECT transfer_id, transfer_type_desc, transfer_status_desc, account_from, account_to, amount " +
                     "FROM transfer " +
@@ -74,7 +74,7 @@ public class JdbcTransferDao implements TransferDao{
                     "JOIN transfer_status ON transfer.transfer_status_id = transfer_status.transfer_status_id " +
                     "JOIN account ON transfer.account_from = account.account_id " +
                     "WHERE account.user_id = ? AND transfer.transfer_status_id = ?; ";
-            SqlRowSet rowSet = jdbcTemplate.queryForRowSet(sql, id, TransferStatus.PENDING);
+            SqlRowSet rowSet = jdbcTemplate.queryForRowSet(sql, userId, TransferStatus.PENDING);
             while (rowSet.next()) {
                 getRowSet = true;
                 Transfer transfer = mapTransferToRowSet(rowSet);
@@ -177,14 +177,14 @@ public class JdbcTransferDao implements TransferDao{
         return transfer;
     }
 
-    private SqlRowSet getUserRowSet(int id) {
+    private SqlRowSet getUserRowSet(int userId) {
         //Gets usernames for Transfer object using account_id
         String sql = "SELECT username FROM tenmo_user " +
                 "JOIN account ON tenmo_user.user_id = account.user_id " +
                 "WHERE account_id = ?;";
 
        // Used to prevent java.sql.SQLException (Invalid cursor position)
-        SqlRowSet rowSet = jdbcTemplate.queryForRowSet(sql, id);
+        SqlRowSet rowSet = jdbcTemplate.queryForRowSet(sql, userId);
         rowSet.next();
         return rowSet;
     }

@@ -3,21 +3,23 @@ package com.techelevator.tenmo.dao;
 import com.techelevator.tenmo.model.Account;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
-
+import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 
+
+@Component //required a bean of type 'com.techelevator.tenmo.dao.AccountDao' that could not be found.
 public class JdbcAccountDao implements AccountDao {
     private JdbcTemplate jdbcTemplate;
 
 
     @Override
-    public BigDecimal getBalance(int id) {
+    public BigDecimal getBalance(int userId) {
         BigDecimal balance;
         String sql = "SELECT balance " +
                 "FROM account " +
                 "JOIN tenmo_user ON account.user_id = tenmo_user.user_id " +
                 "WHERE tenmo_user.user_id = ?";
-        balance = jdbcTemplate.queryForObject(sql, BigDecimal.class, id);
+        balance = jdbcTemplate.queryForObject(sql, BigDecimal.class, userId);
         return balance;
     }
 
