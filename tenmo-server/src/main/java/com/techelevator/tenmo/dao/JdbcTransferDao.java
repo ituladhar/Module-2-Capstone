@@ -1,5 +1,6 @@
 package com.techelevator.tenmo.dao;
 
+import com.techelevator.tenmo.exceptions.TransferNotFoundException;
 import com.techelevator.tenmo.model.Account;
 import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.tenmo.model.TransferStatus;
@@ -14,6 +15,7 @@ import java.util.List;
 
 public class JdbcTransferDao implements TransferDao{
     public JdbcTemplate jdbcTemplate;
+    Boolean getRowSet = false;
 
     @Override
     public void transferMoney(Transfer transfer) {
@@ -35,13 +37,57 @@ public class JdbcTransferDao implements TransferDao{
     }
 
     @Override
-    public void viewTransfers(int id) {
+    public List<Transfer> viewTransfers(int id) throws TransferNotFoundException {
+        List<Transfer> transfers = new ArrayList<>();
+
+        boolean gotRowSet = false;
+        String sql = "SELECT transfer_id, transfer_type_desc, transfer_status_desc, account_from, account_to, amount " +
+                "FROM transfer " +
+                "JOIN transfer_type ON transfer.transfer_type_id = transfer_type.transfer_type_id " +
+                "JOIN transfer_status ON transfer.transfer_status_id = transfer_status.transfer_status_id " +
+                "JOIN account ON transfer.account_from = account.account_id OR transfer.account_to = account.account_id " +
+                "WHERE user_id = ?;";
+
+        SqlRowSet rowSet = jdbcTemplate.queryForRowSet(sql, id);
+        while (rowSet.next()) {
+            gotRowSet = true;
+            Transfer transfer = mapTransferToRowSet(rowSet);
+            transfer.setAccountFromUsername(getUserRowSet(transfer.getAccountFromId()).getString("username"));
+            transfer.setAccountToUsername(getUserRowSet(transfer.getAccountToId()).getString("username"));
+
+            transfers.add(transfer);
+        }
+        if (gotRowSet) {
+            return transfers;
+        }
+        throw new TransferNotFoundException("Error. No such transfer exists or you do not have permission to view it.");
     }
 
     @Override
-    public void viewPendingTransfer(int id) {
+    public List<Transfer> viewPendingTransfer(int id) throws TransferNotFoundException {
+        List<Transfer> pendingTransfers = new ArrayList<>();
+        String sql = "SELECT transfer_id, transfer_type_desc, transfer_status_desc, account_from, account_to, amount " +
+                    "FROM transfer " +
+                    "JOIN transfer_type ON transfer.transfer_type_id = transfer_type.transfer_type_id " +
+                    "JOIN transfer_status ON transfer.transfer_status_id = transfer_status.transfer_status_id " +
+                    "JOIN account ON transfer.account_from = account.account_id " +
+                    "WHERE account.user_id = ? AND transfer.transfer_status_id = ?; ";
+            SqlRowSet rowSet = jdbcTemplate.queryForRowSet(sql, id, TransferStatus.PENDING);
+            while (rowSet.next()) {
+                getRowSet = true;
+                Transfer transfer = mapTransferToRowSet(rowSet);
+                transfer.setAccountFromUsername(getUserRowSet(transfer.getAccountFromId()).getString("username"));
+                transfer.setAccountToUsername(getUserRowSet(transfer.getAccountToId()).getString("username"));
+                pendingTransfers.add(transfer);
+            }
 
-    }
+        if (getRowSet)
+                return pendingTransfers;
+            throw new TransferNotFoundException("Error. No such transfer exists or you do not have permission to view it.");
+        }
+
+
+
 
     @Override
     public BigDecimal sendTransfer(int id) {
@@ -52,6 +98,11 @@ public class JdbcTransferDao implements TransferDao{
     public BigDecimal requestTransfer(Transfer transfer) {
         return null;
     }
+
+
+
+
+
 
     @Override
     public Transfer createTransfer(Transfer transfer) {
@@ -105,7 +156,7 @@ public class JdbcTransferDao implements TransferDao{
     }
 
 
-    private Transfer mapTransferToRowSet(SqlRowSet rowSet) {
+    public Transfer mapTransferToRowSet(SqlRowSet rowSet) {
         Transfer transfer = new Transfer();
 
         transfer.setTransferId(rowSet.getInt("transfer_id"));
@@ -118,9 +169,21 @@ public class JdbcTransferDao implements TransferDao{
         return transfer;
     }
 
+    private SqlRowSet getUserRowSet(int id) {
+        //Gets usernames for Transfer object using account_id
+        String sql = "SELECT username FROM tenmo_user " +
+                "JOIN account ON tenmo_user.user_id = account.user_id " +
+                "WHERE account_id = ?;";
+
+       // Used to prevent java.sql.SQLException (Invalid cursor position)
+        SqlRowSet rowSet = jdbcTemplate.queryForRowSet(sql, id);
+        rowSet.next();
+        return rowSet;
+    }
+
 // Additional methods to check transfers
 
-    private int findAccountByUserId(long id) {
+    private int findAccountByUserId(int id) {
         Account account = new Account();
         String sql = "SELECT account_id " +
                 "FROM account " +

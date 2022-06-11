@@ -1,13 +1,15 @@
 package com.techelevator.tenmo.dao;
 
+import com.techelevator.tenmo.exceptions.TransferNotFoundException;
 import com.techelevator.tenmo.model.Transfer;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public interface TransferDao {
     void transferMoney(Transfer transfer);
-    void viewTransfers(int id);
-    void viewPendingTransfer(int id);
+    List<Transfer> viewTransfers(int userId) throws TransferNotFoundException;
+    List<Transfer> viewPendingTransfer(int id) throws TransferNotFoundException;
     BigDecimal sendTransfer(int id);
     BigDecimal requestTransfer (Transfer transfer);
     Transfer createTransfer(Transfer transfer);

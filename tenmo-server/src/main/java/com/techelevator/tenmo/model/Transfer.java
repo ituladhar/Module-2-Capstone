@@ -9,9 +9,11 @@ public class Transfer {
     private String transferStatus;
     private int accountFromId;
     private int accountToId;
+
     private String accountFromUsername;
     private String accountToUsername;
-    private double amount;
+
+    private BigDecimal amount;
     private long fromUserId;
     private long toUserId;
 
@@ -71,20 +73,21 @@ public class Transfer {
         this.accountToId = accountToId;
     }
 
-    public String getAccountUserFrom() {
-        return accountUserFrom;
+
+    public String getAccountFromUsername() {
+        return accountFromUsername;
     }
 
-    public void setAccountUserFrom(String accountUserFrom) {
-        this.accountUserFrom = accountUserFrom;
+    public void setAccountFromUsername(String accountFromUsername) {
+        this.accountFromUsername = accountFromUsername;
     }
 
-    public String getAccountUserTo() {
-        return accountUserTo;
+    public String getAccountToUsername() {
+        return accountToUsername;
     }
 
-    public void setAccountUserTo(String accountUserTo) {
-        this.accountUserTo = accountUserTo;
+    public void setAccountToUsername(String accountToUsername) {
+        this.accountToUsername = accountToUsername;
     }
 
     public BigDecimal getAmount() {
@@ -94,6 +97,7 @@ public class Transfer {
     public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
+
 
     @Override
     public String toString() {
@@ -105,8 +109,8 @@ public class Transfer {
                 ", transferStatus='" + transferStatus + '\'' +
                 ", accountFromId=" + accountFromId +
                 ", accountToId=" + accountToId +
-                ", accountUserFrom='" + accountUserFrom + '\'' +
-                ", accountUserTo='" + accountUserTo + '\'' +
+                ", accountFromUsername='" + accountFromUsername + '\'' +
+                ", accountToUsername='" + accountToUsername + '\'' +
                 ", amount=" + amount +
                 '}';
     }
