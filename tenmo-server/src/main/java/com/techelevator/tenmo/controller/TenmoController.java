@@ -7,24 +7,28 @@ import com.techelevator.tenmo.exceptions.TransferNotFoundException;
 import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.tenmo.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.security.Principal;
 import java.util.List;
 
 @RestController
 @RequestMapping (path = "users")
+@PreAuthorize("isAuthenticated()")
 public class TenmoController {
     private UserDao userDao;
     private AccountDao accountDao;
     private TransferDao transferDao;
 
-    @Autowired
+
     public TenmoController(UserDao userdao, AccountDao accountDao, TransferDao transferDao) {
         this.userDao = userdao;
         this.accountDao = accountDao;
         this.transferDao = transferDao;
     }
+
 
 
 
@@ -73,5 +77,13 @@ public class TenmoController {
         }
         transferDao.updateTransfer(transfer);
     }
+
+
+    @RequestMapping(path = "/whoami")
+    public String whoAmI(Principal principal) {
+        return principal.getName();
+
+    }
+
 
 }

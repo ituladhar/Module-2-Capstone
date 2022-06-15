@@ -1,18 +1,10 @@
 package com.techelevator.tenmo.model;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
 import java.math.BigDecimal;
 
 public class Account {
-    @NotNull
     private int accountId;
-
-    @NotNull
     private int userId;
-
-    @NotNull
-    @Positive
     private BigDecimal balance;
 
 
@@ -59,3 +51,5 @@ public class Account {
                 '}';
     }
 }
+
+
