@@ -18,4 +18,6 @@ public interface TransferDao {
     void rejectRequest(Transfer transfer);
     void acceptRequest(Transfer transfer);
 
+    // Additional methods to check transfers
+    int findAccountByUserId(int id);
 }

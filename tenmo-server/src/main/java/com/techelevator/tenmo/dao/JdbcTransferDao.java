@@ -9,7 +9,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
-import java.math.BigDecimal;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -190,8 +190,8 @@ public class JdbcTransferDao implements TransferDao{
     }
 
 // Additional methods to check transfers
-
-    private int findAccountByUserId(int id) {
+    @Override
+    public int findAccountByUserId(int id) {
         Account account = new Account();
         String sql = "SELECT account_id " +
                 "FROM account " +

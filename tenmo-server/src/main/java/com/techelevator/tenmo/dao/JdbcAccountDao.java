@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 
 
-@Component //required a bean of type 'com.techelevator.tenmo.dao.AccountDao' that could not be found.
+@Component // Fixed:required a bean of type 'com.techelevator.tenmo.dao.AccountDao' that could not be found.
 public class JdbcAccountDao implements AccountDao {
     private JdbcTemplate jdbcTemplate;
 
@@ -34,6 +34,6 @@ public class JdbcAccountDao implements AccountDao {
 
 
     public  JdbcAccountDao(JdbcTemplate jdbcTemplate){
-        this.jdbcTemplate = jdbcTemplate;
-    }
+       this.jdbcTemplate = jdbcTemplate;
+   }
 }
