@@ -1,9 +1,14 @@
 package com.techelevator.tenmo;
 
+import com.techelevator.tenmo.model.Account;
 import com.techelevator.tenmo.model.AuthenticatedUser;
 import com.techelevator.tenmo.model.UserCredentials;
 import com.techelevator.tenmo.services.AuthenticationService;
 import com.techelevator.tenmo.services.ConsoleService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.Scanner;
 
 public class App {
 
@@ -84,12 +89,13 @@ public class App {
         }
     }
 
-	private void viewCurrentBalance() {
-		// TODO Auto-generated method stub
-		
-	}
 
-	private void viewTransferHistory() {
+	private void viewCurrentBalance() {
+        // TODO Auto-generated method stub
+    }
+
+
+    private void viewTransferHistory() {
 		// TODO Auto-generated method stub
 		
 	}
