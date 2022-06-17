@@ -131,13 +131,16 @@ public class JdbcTransferDao implements TransferDao{
 
 
     @Override
-    public void updateBalance(Transfer transfer) {
+    public void updateBalanceSend (Transfer transfer) {
         String sql = "Update account " +
                 "SET balance = balance - ? " +
                 "WHERE account_id = ?;";
         jdbcTemplate.update(sql, transfer.getAmount(), transfer.getAccountFromId());
 
-        sql = "Update account " +
+    }
+
+    public void updateBalanceRequest (Transfer transfer) {
+        String sql = "Update account " +
                 "SET balance = balance + ?" +
                 "WHERE account_id = ?;";
         jdbcTemplate.update(sql, transfer.getAmount(), transfer.getAccountToId());

@@ -30,7 +30,6 @@ public class TenmoController {
 
 
 
-
     @GetMapping( path = "")
     public List<User> listUsers() {
 
@@ -51,7 +50,9 @@ public class TenmoController {
 
     @PostMapping ( path = "/transfers/requests")
     public Transfer requestMoney(@RequestBody Transfer transfer) {
+
         return transferDao.createTransfer(transfer);
+
     }
 
 
@@ -72,7 +73,8 @@ public class TenmoController {
     @PutMapping (path = "/transfers/requests")
     public void approveOrRejectTransfer(@RequestBody Transfer transfer) {
         if (transfer.getTransferStatusId() == 2) {
-            transferDao.updateBalance(transfer);
+            transferDao.updateBalanceRequest(transfer);
+            transferDao.updateBalanceSend(transfer);
         }
         transferDao.updateTransfer(transfer);
     }

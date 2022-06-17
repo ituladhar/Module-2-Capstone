@@ -14,7 +14,10 @@ public interface TransferDao {
   //  BigDecimal requestTransfer (Transfer transfer);
     Transfer createTransfer(Transfer transfer);
     void updateTransfer(Transfer transfer);
-    void updateBalance(Transfer transfer);
+
+    void updateBalanceSend(Transfer transfer);
+
+    void updateBalanceRequest(Transfer transfer);
     void rejectRequest(Transfer transfer);
     void acceptRequest(Transfer transfer);
 

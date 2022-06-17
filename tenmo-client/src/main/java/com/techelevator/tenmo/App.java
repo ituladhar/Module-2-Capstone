@@ -4,14 +4,19 @@ import com.techelevator.tenmo.model.AuthenticatedUser;
 import com.techelevator.tenmo.model.UserCredentials;
 import com.techelevator.tenmo.services.AuthenticationService;
 import com.techelevator.tenmo.services.ConsoleService;
+import com.techelevator.tenmo.services.TenmoService;
+
+import java.util.Scanner;
 
 public class App {
+
 
     private static final String API_BASE_URL = "http://localhost:8080/";
 
     private final ConsoleService consoleService = new ConsoleService();
     private final AuthenticationService authenticationService = new AuthenticationService(API_BASE_URL);
 
+    private final TenmoService tenmoService = new TenmoService();
     private AuthenticatedUser currentUser;
 
     public static void main(String[] args) {
@@ -86,11 +91,26 @@ public class App {
 
 	private void viewCurrentBalance() {
 		// TODO Auto-generated method stub
+
+        // Your current account balance is: $9999.99
+
+
+         tenmoService.getBalance();
 		
 	}
 
 	private void viewTransferHistory() {
 		// TODO Auto-generated method stub
+
+        // -------------------------------------------
+        //Transfers
+        //ID          From/To                 Amount
+        //-------------------------------------------
+        //23          From: Bernice          $ 903.14
+        //79          To:    Larry           $  12.55
+        //---------
+
+
 		
 	}
 
