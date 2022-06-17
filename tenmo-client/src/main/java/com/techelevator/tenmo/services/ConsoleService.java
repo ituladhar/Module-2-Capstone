@@ -87,5 +87,7 @@ public class ConsoleService {
     public void printErrorMessage() {
         System.out.println("An error occurred. Check the log for details.");
     }
-
+    public void border(){
+        System.out.println("--------------------------");
+    }
 }

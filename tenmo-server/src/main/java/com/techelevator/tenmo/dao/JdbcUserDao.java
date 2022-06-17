@@ -7,6 +7,8 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
+
+import javax.sql.DataSource;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,16 +17,37 @@ import java.util.List;
 public class JdbcUserDao implements UserDao {
 
     private static final BigDecimal STARTING_BALANCE = new BigDecimal("1000.00");
+
     private JdbcTemplate jdbcTemplate;
 
-    public JdbcUserDao(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    public JdbcUserDao(DataSource dataSource) {
+        this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
     @Override
-    public int findIdByUsername(String username) {
-        String sql = "SELECT user_id FROM tenmo_user WHERE username ILIKE ?;";
-        Integer id = jdbcTemplate.queryForObject(sql, Integer.class, username);
+    public long findIdByAccountID(long accountId){
+        String sql = "SELECT user_id "+
+                "FROM account "+
+                "WHERE account_id = ?;";
+        long userId = jdbcTemplate.queryForObject(sql, Long.class, accountId);
+        return userId;
+    }
+
+    @Override
+    public String findUserByAccountID(long accountId){
+        String sql = "SELECT username FROM tenmo_user "+
+                "JOIN account ON account.user_id = tenmo_user.user_id "+
+                "WHERE account_id = ?;";
+        String username = jdbcTemplate.queryForObject(sql, String.class, accountId);
+        return username;
+    }
+
+    @Override
+    public long findIdByUsername(String username) {
+        String sql = "SELECT user_id "+
+                "FROM tenmo_user "+
+                "WHERE username ILIKE ?;";
+        Long id = jdbcTemplate.queryForObject(sql, Long.class, username);
         if (id != null) {
             return id;
         } else {
@@ -33,10 +56,12 @@ public class JdbcUserDao implements UserDao {
     }
 
     @Override
-    public List<User> findAll() {
+    public List<User> findAll(long userId) {
         List<User> users = new ArrayList<>();
-        String sql = "SELECT user_id, username, password_hash FROM tenmo_user;";
-        SqlRowSet results = jdbcTemplate.queryForRowSet(sql);
+        String sql = "SELECT user_id, username, password_hash " +
+                "FROM tenmo_user "+
+                "WHERE NOT user_id = ?;";
+        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, userId);
         while(results.next()) {
             User user = mapRowToUser(results);
             users.add(user);
@@ -46,7 +71,9 @@ public class JdbcUserDao implements UserDao {
 
     @Override
     public User findByUsername(String username) throws UsernameNotFoundException {
-        String sql = "SELECT user_id, username, password_hash FROM tenmo_user WHERE username ILIKE ?;";
+        String sql = "SELECT user_id, username, password_hash "+
+                "FROM tenmo_user "+
+                "WHERE username ILIKE ?;";
         SqlRowSet rowSet = jdbcTemplate.queryForRowSet(sql, username);
         if (rowSet.next()){
             return mapRowToUser(rowSet);
@@ -56,9 +83,9 @@ public class JdbcUserDao implements UserDao {
 
     @Override
     public boolean create(String username, String password) {
-
-        // create user
-        String sql = "INSERT INTO tenmo_user (username, password_hash) VALUES (?, ?) RETURNING user_id";
+        // Create User Info
+        String sql = "INSERT INTO tenmo_user (username, password_hash) "+
+                "VALUES (?, ?) RETURNING user_id";
         String password_hash = new BCryptPasswordEncoder().encode(password);
         Integer newUserId;
         try {
@@ -67,22 +94,23 @@ public class JdbcUserDao implements UserDao {
             return false;
         }
 
-        // create account
-        sql = "INSERT INTO account (user_id, balance) values(?, ?)";
+        // Create Account Info
+         sql = "INSERT INTO account (user_id, balance) values(?, ?)";
         try {
             jdbcTemplate.update(sql, newUserId, STARTING_BALANCE);
         } catch (DataAccessException e) {
             return false;
         }
-
         return true;
     }
 
-    private User mapRowToUser(SqlRowSet rs) {
+
+
+    private User mapRowToUser(SqlRowSet rowSet) {
         User user = new User();
-        user.setId(rs.getLong("user_id"));
-        user.setUsername(rs.getString("username"));
-        user.setPassword(rs.getString("password_hash"));
+        user.setId(rowSet.getLong("user_id"));
+        user.setUsername(rowSet.getString("username"));
+        user.setPassword(rowSet.getString("password_hash"));
         user.setActivated(true);
         user.setAuthorities("USER");
         return user;

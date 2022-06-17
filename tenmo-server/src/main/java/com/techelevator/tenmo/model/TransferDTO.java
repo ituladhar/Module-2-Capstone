@@ -1,9 +1,12 @@
 package com.techelevator.tenmo.model;
 
+import java.math.BigDecimal;
+
 public class TransferDTO {
     private int fromUserId;
     private int toUserId;
-    private double amount;
+    private long userId;
+    private BigDecimal amount;
 
     public int getFrom() {
         return fromUserId;
@@ -21,11 +24,19 @@ public class TransferDTO {
         this.toUserId = to;
     }
 
-    public double getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(double amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
+    }
+
+    public long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(long userId) {
+        this.userId = userId;
     }
 }

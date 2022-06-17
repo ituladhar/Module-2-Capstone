@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 public interface TransferDao {
-    void transferMoney(Transfer transfer);
+  /*  void transferMoney(Transfer transfer);
     List<Transfer> viewTransfers(int userId) throws TransferNotFoundException;
     List<Transfer> viewPendingTransfer(int userId) throws TransferNotFoundException;
   //  BigDecimal sendTransfer(int id);
@@ -22,5 +22,14 @@ public interface TransferDao {
     void acceptRequest(Transfer transfer);
 
     // Additional methods to check transfers
-    int findAccountByUserId(int id);
+    int findAccountByUserId(int id);*/
+
+    public List<Transfer> getAllApprovedTransfers(long accountId);
+    public List<Transfer> getAllPendingTransfers(long accountId);
+    public Transfer getTransferById(long transferId);
+    public Transfer newTransfer(long accountFrom, long accountTo, BigDecimal amount);
+    public Transfer newRequest(long userFrom, long userTo, BigDecimal amount);
+    public boolean rejectRequest(long transferI);
+    public boolean acceptRequest(long userFrom, long userTo, BigDecimal amount, long transferI);
+
 }

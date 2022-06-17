@@ -5,35 +5,70 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
+import javax.sql.DataSource;
 
 
 @Component // Fixed:required a bean of type 'com.techelevator.tenmo.dao.AccountDao' that could not be found.
 public class JdbcAccountDao implements AccountDao {
+
     private JdbcTemplate jdbcTemplate;
 
-
-    @Override
-    public BigDecimal getBalance(int userId) {
-        BigDecimal balance;
-        String sql = "SELECT balance " +
-                "FROM account " +
-                "JOIN tenmo_user ON account.user_id = tenmo_user.user_id " +
-                "WHERE tenmo_user.user_id = ?";
-        balance = jdbcTemplate.queryForObject(sql, BigDecimal.class, userId);
-        return balance;
+    public JdbcAccountDao(DataSource dataSource) {
+        this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
+    @Override
+    public BigDecimal getBalance(long userId) {
+        String sql = "SELECT balance " +
+                "FROM account" +
+                "WHERE user_id = ?;";
+        return jdbcTemplate.queryForObject(sql, BigDecimal.class, userId);
+    }
 
-    private Account mapRowToAccount(SqlRowSet rowSet) {
-        Account account = new Account();
-        account.setAccountId(rowSet.getInt("account_id"));
-        account.setUserId(rowSet.getInt("user_id"));
-        account.setBalance(rowSet.getBigDecimal("balance"));
+    @Override
+    public Account getAnAccountByUserId(long userId) {
+        String sql = "SELECT * "+
+                "FROM account " +
+                "WHERE user_id = ?;";
+        SqlRowSet results = this.jdbcTemplate.queryForRowSet(sql, userId);
+        Account account = null;
+        if (results.next()) {
+            account = accountObjectMapper(results);
+        }
         return account;
     }
 
+    @Override
+    public void addBalance(BigDecimal amount, long userId) {
+        String sql = "UPDATE account "+
+                "SET balance = balance + ? "+
+                "WHERE user_id = ?;";
+        jdbcTemplate.update(sql, amount, userId);
 
-    public  JdbcAccountDao(JdbcTemplate jdbcTemplate){
-       this.jdbcTemplate = jdbcTemplate;
-   }
+    }
+
+    @Override
+    public boolean subtractBalance(BigDecimal amount, long userId) {
+        Account account = getAnAccountByUserId(userId);
+        int res = account.getBalance().compareTo(amount);
+
+        if (res == 1 || res == 0) {
+            String sql = "UPDATE account "+
+                    "SET balance = balance - ? "+
+                    "WHERE user_id = ?;";
+            jdbcTemplate.update(sql, amount, userId);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    // SqlRowSet Object Mapper :)
+    private Account accountObjectMapper(SqlRowSet results) {
+        Account account = new Account();
+        account.setAccountId(results.getLong("account_id"));
+        account.setBalance(results.getBigDecimal("balance"));
+        return account;
+    }
+
 }

@@ -2,17 +2,15 @@ package com.techelevator.tenmo;
 
 import com.techelevator.tenmo.model.Account;
 import com.techelevator.tenmo.model.AuthenticatedUser;
+import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.tenmo.model.UserCredentials;
 import com.techelevator.tenmo.services.AuthenticationService;
 import com.techelevator.tenmo.services.ConsoleService;
-<<<<<<< HEAD
+
 import com.techelevator.tenmo.services.TenmoService;
-=======
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
->>>>>>> ec5848389a9a8a44785c0029e2f4cca00b68a779
 
 import java.util.Scanner;
+import java.math.BigDecimal;
 
 public class App {
 
@@ -97,23 +95,14 @@ public class App {
 
 
 	private void viewCurrentBalance() {
-<<<<<<< HEAD
-		// TODO Auto-generated method stub
-
         // Your current account balance is: $9999.99
-
-
-         tenmoService.getBalance();
-		
-	}
-=======
         // TODO Auto-generated method stub
+        System.out.println("Your current balance is: $" + tenmoService.getAccountBalance());
     }
-
->>>>>>> ec5848389a9a8a44785c0029e2f4cca00b68a779
 
     private void viewTransferHistory() {
 		// TODO Auto-generated method stub
+/*
 
         // -------------------------------------------
         //Transfers
@@ -122,9 +111,8 @@ public class App {
         //23          From: Bernice          $ 903.14
         //79          To:    Larry           $  12.55
         //---------
+*/
 
-
-		
 	}
 
 	private void viewPendingRequests() {
