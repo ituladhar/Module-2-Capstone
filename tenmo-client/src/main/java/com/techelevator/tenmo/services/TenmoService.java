@@ -157,7 +157,6 @@ public class TenmoService {
     }
     public boolean rejectRequest(long transferId, long accountToId, BigDecimal amount){
         TransferDTO transferDTO = new TransferDTO(accountToId, amount);
-        boolean what;
         try {
             restTemplate.put(API_BASE_URL + "transfer/" + transferId + "/reject",
                     makeTransferEntity(transferDTO));
