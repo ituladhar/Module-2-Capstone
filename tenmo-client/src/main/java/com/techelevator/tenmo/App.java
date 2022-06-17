@@ -1,10 +1,16 @@
 package com.techelevator.tenmo;
 
+import com.techelevator.tenmo.model.Account;
 import com.techelevator.tenmo.model.AuthenticatedUser;
 import com.techelevator.tenmo.model.UserCredentials;
 import com.techelevator.tenmo.services.AuthenticationService;
 import com.techelevator.tenmo.services.ConsoleService;
+<<<<<<< HEAD
 import com.techelevator.tenmo.services.TenmoService;
+=======
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
+>>>>>>> ec5848389a9a8a44785c0029e2f4cca00b68a779
 
 import java.util.Scanner;
 
@@ -89,7 +95,9 @@ public class App {
         }
     }
 
+
 	private void viewCurrentBalance() {
+<<<<<<< HEAD
 		// TODO Auto-generated method stub
 
         // Your current account balance is: $9999.99
@@ -98,8 +106,13 @@ public class App {
          tenmoService.getBalance();
 		
 	}
+=======
+        // TODO Auto-generated method stub
+    }
 
-	private void viewTransferHistory() {
+>>>>>>> ec5848389a9a8a44785c0029e2f4cca00b68a779
+
+    private void viewTransferHistory() {
 		// TODO Auto-generated method stub
 
         // -------------------------------------------
