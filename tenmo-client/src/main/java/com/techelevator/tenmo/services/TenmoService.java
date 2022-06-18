@@ -8,14 +8,25 @@ import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
+import java.util.Scanner;
 
 public class TenmoService {
 
-    public static final String API_BASE_URL = "http://localhost:8080/";
-    private final RestTemplate restTemplate = new RestTemplate();
-    AuthenticatedUser authenticatedUser;
 
+    private final RestTemplate restTemplate = new RestTemplate();
+    ConsoleService consoleService = new ConsoleService();
+
+
+    AuthenticatedUser authenticatedUser;
+    AuthenticatedUser currentUser;
+    public static final String API_BASE_URL = "http://localhost:8080/";
     private String authToken = null;
+
+//    public TenmoService(AuthenticatedUser authenticatedUser, String API_BASE_URL) {
+//        this.authenticatedUser = authenticatedUser;
+//        API_BASE_URL = url;
+//    }
+
 
     public void setAuthToken(String authToken) {
         this.authToken = authToken;
@@ -83,11 +94,25 @@ public class TenmoService {
                     HttpMethod.GET,
                     makeAuthEntity(),
                     Transfer[].class).getBody();
+
+            long currentAccountId = getAccountById(currentUser.getUser().getId()).getAccountId();
+            for (Transfer transfer : listOfTransfers) {
+                String usernameTo = username(transfer.getAccountToUsername());
+                String usernameFrom = username(transfer.getAccountFromUsername());
+                if (transfer.getAccountFromUsername() == currentAccountId) {
+                    System.out.println(transfer.getTransferId() + "To: " + usernameTo + transfer.getAmount());
+                } else if (transfer.getAccountToUsername() == currentAccountId) {
+                    System.out.println(transfer.getTransferId() + "From: " + usernameFrom + transfer.getAmount());
+                }
+            }
         } catch (RestClientResponseException | ResourceAccessException e) {
             System.out.println("Error! Approved transfers not found");
         }
         return listOfTransfers;
     }
+
+
+
 
     public Transfer[] getAllPendingTransfers() {
         Transfer[] listOfTransfers = null;
@@ -97,11 +122,59 @@ public class TenmoService {
                     HttpMethod.GET,
                     makeAuthEntity(),
                     Transfer[].class).getBody();
+
         } catch (RestClientResponseException | ResourceAccessException e) {
             System.out.println("Error! Pending transfers not found");
         }
         return listOfTransfers;
     }
+
+
+    public Transfer[] getPendingTransfers() {
+        Transfer[] listOfPendingTransfers = null;
+        try {
+            listOfPendingTransfers = restTemplate.exchange(
+                    API_BASE_URL + "transfers/pending",
+                    HttpMethod.GET,
+                    makeAuthEntity(),
+                    Transfer[].class).getBody();
+            long currentAccountId = getAccountById(currentUser.getUser().getId()).getAccountId();
+            for (Transfer transfer : listOfPendingTransfers) {
+                String usernameTo = username(transfer.getAccountToUsername());
+                String usernameFrom = username(transfer.getAccountFromUsername());
+                if (transfer.getAccountFromUsername() == currentAccountId) {
+                    System.out.println(transfer.getTransferId() + "To: " + usernameTo + transfer.getAmount());
+                } else if (transfer.getAccountToUsername() == currentAccountId) {
+                    System.out.println(transfer.getTransferId() + "From: " + usernameFrom + transfer.getAmount());
+                }
+            }
+
+            System.out.println("---------");
+            System.out.println("Please enter transfer ID to approve/reject (0 to cancel):\"");
+            int menuSelection = consoleService.promptForMenuSelection("Please make a choice :\"");
+            System.out.println("1: Approve");
+            System.out.println("2: Reject");
+            System.out.println("0: Don't approve or reject");
+            Transfer t = new Transfer();
+                if (menuSelection == 1) {
+                    acceptRequest(t.getTransferId(),t.getAccountToId(),t.getAmount());
+                } else if ( menuSelection == 2) {
+                    rejectRequest(t.getTransferId(),t.getAccountToId(),t.getAmount());
+                } else {
+                    consoleService.pause();
+                }
+
+        } catch (RestClientResponseException | ResourceAccessException e) {
+            System.out.println("Error! Pending transfers not found");
+        }
+
+        return listOfPendingTransfers;
+
+    }
+
+
+
+
 
     public Transfer getTransferById(long transferId){
         Transfer transfer = null;
@@ -131,6 +204,8 @@ public class TenmoService {
         return transfer;
     }
 
+
+
     public Transfer makeRequest(long userFromId, BigDecimal amount) {
         TransferDTO transferDTO = new TransferDTO(userFromId, amount);
         Transfer transfer = null;
@@ -145,16 +220,23 @@ public class TenmoService {
         return transfer;
     }
 
+
+
+
+
     public boolean acceptRequest(long transferId, long accountToId, BigDecimal amount){
         TransferDTO transferDTO = new TransferDTO(accountToId, amount);
         try {
             restTemplate.put(API_BASE_URL + "transfer/" + transferId + "/accept",
                     makeTransferEntity(transferDTO));
             return true;
-        }catch (RestClientResponseException | ResourceAccessException e) {
+        } catch (RestClientResponseException | ResourceAccessException e) {
             System.out.println("Error in accepting request");
         } return false;
+
     }
+
+
     public boolean rejectRequest(long transferId, long accountToId, BigDecimal amount){
         TransferDTO transferDTO = new TransferDTO(accountToId, amount);
         try {
@@ -165,6 +247,7 @@ public class TenmoService {
             System.out.println("Error in rejecting request");
         } return false;
     }
+
 
     public String username(long accountId) {
         String username = null;

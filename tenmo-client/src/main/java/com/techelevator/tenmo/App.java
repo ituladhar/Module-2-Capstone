@@ -35,6 +35,7 @@ public class App {
             mainMenu();
         }
     }
+
     private void loginMenu() {
         int menuSelection = -1;
         while (menuSelection != 0 && currentUser == null) {
@@ -94,40 +95,62 @@ public class App {
     }
 
 
-	private void viewCurrentBalance() {
+    private void viewCurrentBalance() {
         // Your current account balance is: $9999.99
         // TODO Auto-generated method stub
         System.out.println("Your current balance is: $" + tenmoService.getAccountBalance());
     }
 
     private void viewTransferHistory() {
-		// TODO Auto-generated method stub
-/*
+        // TODO Auto-generated method stub
 
-        // -------------------------------------------
-        //Transfers
-        //ID          From/To                 Amount
-        //-------------------------------------------
-        //23          From: Bernice          $ 903.14
-        //79          To:    Larry           $  12.55
-        //---------
-*/
+        System.out.println("-------------------------------------------");
+        System.out.println("Transfers");
+        System.out.println("ID \t\t\t From/To \t\t\t   Amount");
+        System.out.println("-------------------------------------------");
+        tenmoService.getAllTransfers();
 
-	}
+//        tenmoService.getAccountById(currentUser.getUser().getId());
+////        tenmoService.getAccountById(currentUser.getUser().getId());
 
-	private void viewPendingRequests() {
-		// TODO Auto-generated method stub
-		
-	}
+//        Transfer[] listOfTransfers = tenmoService.getAllTransfers();
+//        long currentAccountId = tenmoService.getAccountById(currentUser.getUser().getId()).getAccountId();
+//        for (Transfer transfer : listOfTransfers) {
+//            String usernameTo = tenmoService.username(transfer.getAccountToUsername());
+//            String usernameFrom = tenmoService.username(transfer.getAccountFromUsername());
+//            if (transfer.getAccountFromUsername() == currentAccountId) {
+//                System.out.println(transfer.getTransferId() + "To: " + usernameTo + transfer.getAmount());
+//            } else if (transfer.getAccountToUsername() == currentAccountId) {
+//                System.out.println(transfer.getTransferId() + "From: " + usernameFrom + transfer.getAmount());
+//            }
+//        }
 
-	private void sendBucks() {
-		// TODO Auto-generated method stub
-		
-	}
 
-	private void requestBucks() {
-		// TODO Auto-generated method stub
-		
-	}
+    }
 
-}
+
+
+        private void viewPendingRequests () {
+            // TODO Auto-generated method stub
+
+            System.out.println("-------------------------------------------");
+            System.out.println("Pending Transfers");
+            System.out.println("ID \t\t\t From/To \t\t\t   Amount");
+            System.out.println("-------------------------------------------");
+            tenmoService.getAllPendingTransfers();
+
+        }
+
+        private void sendBucks () {
+            // TODO Auto-generated method stub
+
+        }
+
+        private void requestBucks () {
+            // TODO Auto-generated method stub
+
+        }
+
+    }
+
+
