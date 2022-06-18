@@ -6,8 +6,8 @@ public class Transfer {
     private long transferId;
     private long transferTypeId;
     private long transferStatusId;
-    private String transferType;
-    private String transferStatus;
+    private String transferTypeDesc;
+    private String transferStatusDesc;
     private long accountFrom;
     private long accountTo;
     private BigDecimal amount;
@@ -38,20 +38,20 @@ public class Transfer {
         this.transferStatusId = transferStatusId;
     }
 
-    public String getTransferType() {
-        return transferType;
+    public String getTransferTypeDesc() {
+        return transferTypeDesc;
     }
 
-    public void setTransferType(String transferType) {
-        this.transferType = transferType;
+    public void setTransferTypeDesc(String transferTypeDesc) {
+        this.transferTypeDesc = transferTypeDesc;
     }
 
-    public String getTransferStatus() {
-        return transferStatus;
+    public String getTransferStatusDesc() {
+        return transferStatusDesc;
     }
 
-    public void setTransferStatus(String transferStatus) {
-        this.transferStatus = transferStatus;
+    public void setTransferStatusDesc(String transferStatusDesc) {
+        this.transferStatusDesc = transferStatusDesc;
     }
 
     public long getAccountFrom() {
@@ -78,13 +78,11 @@ public class Transfer {
         this.amount = amount;
     }
 
-
     @Override
     public String toString() {
-        return "Transfer{" +
-                "transferId=" + transferId +
-                ", transferType='" + transferType + '\'' +
-                ", transferStatus='" + transferStatus + '\'' +
+        return "\nId: " + transferId +
+                "\nType: " + transferTypeDesc +
+                "\nStatus: " + transferStatusDesc +
                 "\nFrom: " + accountFrom +
                 "\nTo: " + accountTo +
                 "\nAmount: $" + amount;

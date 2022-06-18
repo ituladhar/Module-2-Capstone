@@ -20,7 +20,6 @@ import java.util.List;
 
 @RestController
 //@RequestMapping ("/users")
-@RequestMapping ()
 @PreAuthorize("isAuthenticated()")
 public class TenmoController {
     @Autowired
@@ -35,7 +34,7 @@ public class TenmoController {
         return userDao.findAll();
     }*/
 
-    @GetMapping(path="balance")
+    @GetMapping("/balance")
     public BigDecimal getAccountBalance(Principal principal){
         String username = principal.getName();
         long userId = userDao.findIdByUsername(username);
@@ -43,24 +42,24 @@ public class TenmoController {
         return balance;
     }
 
-    @GetMapping(path="account/{id}")
+    @GetMapping("/account/{id}")
     public Account getAccountByUserId(@PathVariable long id){
         return accountDao.getAnAccountByUserId(id);
     }
 
-    @GetMapping(path="user/{id}")
+    @GetMapping("/user/{id}")
     public long getUserIdByAccountId(@PathVariable long id){
         return userDao.findIdByAccountID(id);
     }
 
-    @GetMapping("users")
+    @GetMapping("/users")
     public List<User>getAllUsers(Principal principal){
         String username = principal.getName();
         long userID = userDao.findIdByUsername(username);
         return userDao.findAll(userID);
     }
 
-    @GetMapping(path="transfers")
+    @GetMapping("/transfers")
     public List<Transfer> listTransfers(Principal principal){
         String username = principal.getName();
         long userID = userDao.findIdByUsername(username);
@@ -71,7 +70,7 @@ public class TenmoController {
 
     }
 
-    @GetMapping(path="transfers/pending")
+    @GetMapping("/transfers/pending")
     public List<Transfer> listPendingTransfers(Principal principal){
         String username = principal.getName();
         long userID = userDao.findIdByUsername(username);
@@ -81,45 +80,52 @@ public class TenmoController {
         return  transferList;
     }
 
-    @GetMapping(path="transfers/{transferId}")
+    @GetMapping("/transfers/{transferId}")
     public Transfer transferDetails (@PathVariable long transferId){
         return transferDao.getTransferById(transferId);
     }
 
 
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping(path="transfers")
+    @PostMapping("/transfers")
     public Transfer startTransfer (Principal principal,
                                    @Valid @RequestBody
                                    TransferDTO transferDTO) {
         String username = principal.getName();
         long userID = userDao.findIdByUsername(username);
-        Transfer transfer = transferDao.newTransfer(userID, transferDTO.getUserId(),transferDTO.getAmount());
+        Transfer transfer = transferDao.newTransfer(userID,
+                transferDTO.getUserId(),
+                transferDTO.getAmount());
         return transfer;
     }
 
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping(path="requests")
+    @PostMapping("/requests")
     public Transfer requestTransfer(Principal principal,
                                     @Valid @RequestBody
                                     TransferDTO transferDTO){
         String username = principal.getName();
         long userId = userDao.findIdByUsername(username);
-        Transfer transfer = transferDao.newRequest(transferDTO.getUserId(), userId, transferDTO.getAmount());
+        Transfer transfer = transferDao.newRequest(transferDTO.getUserId(),
+                userId,
+                transferDTO.getAmount());
         return transfer;
     }
 
-    @PutMapping(path="transfer/{transferId}/accept")
+    @PutMapping("/transfer/{transferId}/accept")
     public boolean acceptTransfer(Principal principal,
                                   @Valid @RequestBody
                                   TransferDTO transferDTO,
                                   @PathVariable long transferId) {
         String usernameFrom = principal.getName();
         long userFromId = userDao.findIdByUsername(usernameFrom);
-        return transferDao.acceptRequest(userFromId, transferDTO.getUserId(), transferDTO.getAmount(), transferId);
+        return transferDao.acceptRequest(userFromId,
+                transferDTO.getUserId(),
+                transferDTO.getAmount(),
+                transferId);
     }
 
-    @PutMapping(path="transfer/{transferId}/reject")
+    @PutMapping("/transfer/{transferId}/reject")
     public boolean rejectTransfer(Principal principal,
                                   @Valid @RequestBody
                                   TransferDTO transferDTO,
@@ -129,12 +135,12 @@ public class TenmoController {
         return transferDao.rejectRequest(transferId);
     }
 
-    @GetMapping(path="username/{accountId}")
+    @GetMapping("/username/{accountId}")
     public String username (@PathVariable long accountId){
         return userDao.findUserByAccountID(accountId);
     }
 
-    @RequestMapping(path = "/whoami")
+    @RequestMapping("/whoami")
     public String whoAmI(Principal principal) {
         return principal.getName();
 

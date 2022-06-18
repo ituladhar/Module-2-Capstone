@@ -4,16 +4,14 @@ import java.lang.*;
 import java.math.BigDecimal;
 
 public class Transfer {
-
-
     @Size(min = 1)
     private long transferId;
 
-      @NotBlank
-    private String transferType;
-
     @NotBlank
-    private String transferStatus;
+    private String transferTypeDesc;
+
+   @NotBlank
+    private String transferStatusDesc;
 
     @Size(min = 0)
     private long accountFrom;
@@ -21,21 +19,24 @@ public class Transfer {
     @Size( min = 0)
     private long accountTo;
 
-      @NotNull
+    @NotNull
     @Positive
     private BigDecimal amount;
 
 
-    public Transfer(long transferId, long accountFrom, long accountTo, BigDecimal amount, String transferType, String transferStatus) {
+    public Transfer(long transferId, long accountFrom, long accountTo, BigDecimal amount, String transferTypeDesc, String transferStatusDesc) {
         this.transferId = transferId;
-        this.transferType = transferType;
-        this.transferStatus = transferStatus;
+        this.transferTypeDesc = transferTypeDesc;
+        this.transferStatusDesc = transferStatusDesc;
         this.accountFrom = accountFrom;
         this.accountTo = accountTo;
         this.amount = amount;
     }
 
-    public Transfer() {}
+    public Transfer() {
+
+    }
+
 
     public long getTransferId() {
         return transferId;
@@ -45,22 +46,20 @@ public class Transfer {
         this.transferId = transferId;
     }
 
-
-
-    public String getTransferType() {
-        return transferType;
+    public String getTransferTypeDesc() {
+        return transferTypeDesc;
     }
 
-    public void setTransferType(String transferType) {
-        this.transferType = transferType;
+    public void setTransferTypeDesc(String transferTypeDesc) {
+        this.transferTypeDesc = transferTypeDesc;
     }
 
-    public String getTransferStatus() {
-        return transferStatus;
+    public String getTransferStatusDesc() {
+        return transferStatusDesc;
     }
 
-    public void setTransferStatus(String transferStatus) {
-        this.transferStatus = transferStatus;
+    public void setTransferStatusDesc(String transferStatusDesc) {
+        this.transferStatusDesc = transferStatusDesc;
     }
 
     public long getAccountFrom() {

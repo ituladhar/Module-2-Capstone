@@ -19,17 +19,13 @@ public class JdbcAccountDao implements AccountDao {
 
     @Override
     public BigDecimal getBalance(long userId) {
-        String sql = "SELECT balance " +
-                "FROM account" +
-                "WHERE user_id = ?;";
+        String sql = "SELECT balance FROM account WHERE user_id = ?;";
         return jdbcTemplate.queryForObject(sql, BigDecimal.class, userId);
     }
 
     @Override
     public Account getAnAccountByUserId(long userId) {
-        String sql = "SELECT * "+
-                "FROM account " +
-                "WHERE user_id = ?;";
+        String sql = "SELECT * FROM account WHERE user_id = ?";
         SqlRowSet results = this.jdbcTemplate.queryForRowSet(sql, userId);
         Account account = null;
         if (results.next()) {
@@ -40,19 +36,19 @@ public class JdbcAccountDao implements AccountDao {
 
     @Override
     public void addBalance(BigDecimal amount, long userId) {
-        String sql = "UPDATE account "+
-                "SET balance = balance + ? "+
-                "WHERE user_id = ?;";
+        String sql = "UPDATE account SET balance = balance + ? "+
+                "WHERE user_id = ?";
         jdbcTemplate.update(sql, amount, userId);
+
 
     }
 
     @Override
     public boolean subtractBalance(BigDecimal amount, long userId) {
         Account account = getAnAccountByUserId(userId);
-        int res = account.getBalance().compareTo(amount);
+        int result= account.getBalance().compareTo(amount);
 
-        if (res == 1 || res == 0) {
+        if (result == 1 || result == 0) {
             String sql = "UPDATE account "+
                     "SET balance = balance - ? "+
                     "WHERE user_id = ?;";

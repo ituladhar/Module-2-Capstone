@@ -6,7 +6,6 @@ import com.techelevator.tenmo.services.ConsoleService;
 
 import com.techelevator.tenmo.services.TenmoService;
 
-import java.util.Scanner;
 import java.math.BigDecimal;
 
 public class App {
@@ -102,11 +101,11 @@ public class App {
     private void viewTransferHistory() {
         // TODO Auto-generated method stub
 
-        System.out.println("-------------------------------------------");
+     /*   System.out.println("-------------------------------------------");
         System.out.println("Transfers");
         System.out.println("ID \t\t\t From/To \t\t\t   Amount");
         System.out.println("-------------------------------------------");
-        tenmoService.getAllTransfers();
+        tenmoService.getAllTransfers();*/
 
 //        tenmoService.getAccountById(currentUser.getUser().getId());
 ////        tenmoService.getAccountById(currentUser.getUser().getId());
@@ -130,6 +129,8 @@ public class App {
             System.out.println("ID \t\tFrom/To \tAmount");
             consoleService.border();
             long currentAccountId = tenmoService.getAccountById(currentUser.getUser().getId()).getAccountId();
+            if(listOfTransfers != null)
+            {
             for (Transfer transfer : listOfTransfers) {
                 String usernameTo = tenmoService.username(transfer.getAccountTo());
                 String usernameFrom = tenmoService.username(transfer.getAccountFrom());
@@ -138,9 +139,8 @@ public class App {
                 } else if (transfer.getAccountTo() == currentAccountId) {
                     System.out.println(transfer.getTransferId() + "\tFrom: " + usernameFrom + "\t" + transfer.getAmount());
                 }
-
             }
-            consoleService.border();
+            consoleService.border();}
             int input = consoleService.promptForInt("\nPlease enter transfer ID to view details (0 to cancel): ");
             if (input == 0) {
                 viewHistory = false;
@@ -156,8 +156,8 @@ public class App {
                     System.out.println("ID:" + transfer.getTransferId());
                     System.out.println("From: " + tenmoService.username(transfer.getAccountFrom()));
                     System.out.println("To: " + tenmoService.username(transfer.getAccountTo()));
-                    System.out.println("Type: " + transfer.getTransferType());
-                    System.out.println("Status: " + transfer.getTransferStatus());
+                    System.out.println("Type: " + transfer.getTransferTypeDesc());
+                    System.out.println("Status: " + transfer.getTransferStatusDesc());
                     System.out.println("Amount: $" + transfer.getAmount());
                     consoleService.border();
                     consoleService.pause();
@@ -209,8 +209,8 @@ public class App {
         System.out.println("ID:" + transfer.getTransferId());
         System.out.println("From: " + tenmoService.username(transfer.getAccountFrom()));
         System.out.println("To: " + tenmoService.username(transfer.getAccountTo()));
-        System.out.println("Type: " + transfer.getTransferType());
-        System.out.println("Status: " + transfer.getTransferStatus());
+        System.out.println("Type: " + transfer.getTransferTypeDesc());
+        System.out.println("Status: " + transfer.getTransferStatusDesc());
         System.out.println("Amount: $" + transfer.getAmount());
         consoleService.border();
         consoleService.border();

@@ -6,10 +6,10 @@ import java.math.BigDecimal;
 
 public class Account {
     @NotNull
-    private long accountId;
+    private long userId;
 
     @NotNull
-    private long userId;
+    private long accountId;
 
     @NotNull
     @Positive
@@ -20,9 +20,15 @@ public class Account {
           this.accountId = accountId;
           this.balance = balance;
     }
+    public Account(){}
 
-    public Account() {
 
+    public long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(long userId) {
+        this.userId = userId;
     }
 
     public long getAccountId() {
@@ -31,14 +37,6 @@ public class Account {
 
     public void setAccountId(long accountId) {
         this.accountId = accountId;
-    }
-
-    public long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(long userId) {
-        this.userId = userId;
     }
 
     public BigDecimal getBalance() {

@@ -24,12 +24,12 @@ public interface TransferDao {
     // Additional methods to check transfers
     int findAccountByUserId(int id);*/
 
-    public List<Transfer> getAllApprovedTransfers(long accountId);
-    public List<Transfer> getAllPendingTransfers(long accountId);
-    public Transfer getTransferById(long transferId);
-    public Transfer newTransfer(long accountFrom, long accountTo, BigDecimal amount);
-    public Transfer newRequest(long userFrom, long userTo, BigDecimal amount);
-    public boolean rejectRequest(long transferI);
-    public boolean acceptRequest(long userFrom, long userTo, BigDecimal amount, long transferI);
+     List<Transfer> getAllApprovedTransfers(long accountId);
+     List<Transfer> getAllPendingTransfers(long accountId);
+     Transfer getTransferById(long transferId);
+     Transfer newTransfer(long accountFrom, long accountTo, BigDecimal amount);
+     Transfer newRequest(long userFrom, long userTo, BigDecimal amount);
+     boolean rejectRequest(long transferId);
+     boolean acceptRequest(long userFrom, long userTo, BigDecimal amount, long transferId);
 
 }

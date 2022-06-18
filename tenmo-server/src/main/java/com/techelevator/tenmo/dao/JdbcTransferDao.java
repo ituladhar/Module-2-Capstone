@@ -20,8 +20,7 @@ import java.util.List;
 @Component // constructor in com.techelevator.tenmo.controller.TenmoController required a bean of type 'com.techelevator.tenmo.dao.TransferDao' that could not be found.
 public class JdbcTransferDao implements TransferDao {
 
-    public JdbcTemplate jdbcTemplate;
-    Boolean getRowSet = false;
+    private JdbcTemplate jdbcTemplate;
 
     @Autowired
     private AccountDao accountDao;
@@ -34,10 +33,10 @@ public class JdbcTransferDao implements TransferDao {
     @Override
     public List<Transfer> getAllApprovedTransfers(long accountId) {
         List<Transfer> transfers = new ArrayList<>();
-        String sql = "SELECT transfer.transfer_id, transfer.account_from, transfer.account_to, transfer.amount, transferType.transfer_type_desc, transferStatus.transfer_status_desc FROM transfer transfer " +
-                "JOIN transfer_status ts ON transfer.transfer_status_id = transferStatus.transfer_status_id " +
-                "JOIN transfer_type transferType ON transfer.transfer_type_id = transferType.transfer_type_id " +
-                "WHERE (account_from = ? OR account_to = ?) AND transfer.transfer_status_id = 2";
+        String sql = "SELECT t.transfer_id, t.account_from, t.account_to, t.amount, tt.transfer_type_desc, ts.transfer_status_desc FROM transfer t " +
+                "JOIN transfer_status ts ON t.transfer_status_id = ts.transfer_status_id " +
+                "JOIN transfer_type tt ON t.transfer_type_id = tt.transfer_type_id " +
+                "WHERE (account_from = ? OR account_to = ?) AND t.transfer_status_id = 2" ;
         SqlRowSet results = this.jdbcTemplate.queryForRowSet(sql, accountId, accountId);
         while (results.next()) {
             transfers.add(mapRowToTransfer(results));
@@ -48,10 +47,10 @@ public class JdbcTransferDao implements TransferDao {
     @Override
     public List<Transfer> getAllPendingTransfers(long accountId) {
         List<Transfer> transfers = new ArrayList<>();
-        String sql = "SELECT transfer.transfer_id, transfer.account_from, transfer.account_to, transfer.amount, transferType.transfer_type_desc, transferStatus.transfer_status_desc FROM transfer transfer " +
-                "JOIN transfer_status ts ON transfer.transfer_status_id = transferStatus.transfer_status_id " +
-                "JOIN transfer_type transferType ON transfer.transfer_type_id = transferType.transfer_type_id " +
-                "WHERE account_from = ? AND t.transfer_status_id = 1";
+        String sql = "SELECT t.transfer_id, t.account_from, t.account_to, t.amount, tt.transfer_type_desc, ts.transfer_status_desc FROM transfer t " +
+                "JOIN transfer_status ts ON t.transfer_status_id = ts.transfer_status_id " +
+                "JOIN transfer_type tt ON t.transfer_type_id = tt.transfer_type_id " +
+                "WHERE account_from = ? AND t.transfer_status_id = 1 ";
         SqlRowSet results = this.jdbcTemplate.queryForRowSet(sql, accountId);
         while (results.next()) {
             transfers.add(mapRowToTransfer(results));
@@ -62,10 +61,10 @@ public class JdbcTransferDao implements TransferDao {
     @Override
     public Transfer getTransferById(long transferId) {
         Transfer transfer = new Transfer();
-        String sql = "SELECT transfer.transfer_id, transfer.account_from, transfer.account_to, transfer.amount, transferType.transfer_type_desc, transferStatus.transfer_status_desc FROM transfer transfer " +
-                "JOIN transfer_status ts ON transfer.transfer_status_id = transferStatus.transfer_status_id " +
-                "JOIN transfer_type transferType ON transfer.transfer_type_id = transferType.transfer_type_id " +
-                "WHERE t.transfer_id = ?";
+        String sql = "SELECT t.transfer_id, t.account_from, t.account_to, t.amount, tt.transfer_type_desc, ts.transfer_status_desc FROM transfer t " +
+                "JOIN transfer_status ts ON t.transfer_status_id = ts.transfer_status_id " +
+                "JOIN transfer_type tt ON t.transfer_type_id = tt.transfer_type_id " +
+                "WHERE t.transfer_id = ? ";
         SqlRowSet results = jdbcTemplate.queryForRowSet(sql, transferId);
         if (results.next()) {
             transfer = mapRowToTransfer(results);
@@ -75,9 +74,8 @@ public class JdbcTransferDao implements TransferDao {
 
     @Override
     public Transfer newTransfer(long userFrom, long userTo, BigDecimal amount) {
-        String sql = "INSERT INTO transfer " +
-                "(account_from, account_to, amount, transfer_status_id, transfer_type_id) " +
-                "Values (?, ?, ?, ?, ?) RETURNING transfer_id";
+        String sql = "INSERT INTO transfer (account_from, account_to, amount, transfer_status_id, transfer_type_id) " +
+                "Values (?, ?, ?, ?, ?) RETURNING transfer_id ";
         long newTransferId = 0;
         Account accountFrom = accountDao.getAnAccountByUserId(userFrom);
         Account accountTo = accountDao.getAnAccountByUserId(userTo);
@@ -90,29 +88,27 @@ public class JdbcTransferDao implements TransferDao {
                     newTransferId = jdbcTemplate.queryForObject(sql, Long.class, accountFrom.getAccountId(), accountTo.getAccountId(), amount, 3, 2);
                 }
             } catch (DataAccessException e) {
-                System.out.println("Something went wrong while making transfer");
+                System.out.println("Error while making transfer");
             }
-
         } else {
             newTransferId = jdbcTemplate.queryForObject(sql, Long.class, accountFrom.getAccountId(), accountTo.getAccountId(), amount, 3, 2);
-
         }
         return getTransferById(newTransferId);
     }
 
     @Override
     public Transfer newRequest(long userFrom, long userTo, BigDecimal amount) {
-        String sql = "INSERT INTO transfer " +
-                "(account_from, account_to, amount, transfer_status_id, transfer_type_id) " + "" +
-                "Values (?, ?, ?, ?, ?) RETURNING transfer_id";
+        String sql = "INSERT INTO transfer (account_from, account_to, amount, transfer_status_id, transfer_type_id) "+
+                "Values (?, ?, ?, ?, ?) RETURNING transfer_id ";
         long newTransferId = 0;
         Account accountFrom = accountDao.getAnAccountByUserId(userFrom);
         Account accountTo = accountDao.getAnAccountByUserId(userTo);
+
         if (userFrom != userTo) {
             try {
                 newTransferId = jdbcTemplate.queryForObject(sql, Long.class, accountFrom.getAccountId(), accountTo.getAccountId(), amount, 1, 1);
             } catch (DataAccessException e) {
-                System.out.println("Something went wrong while making transfer");
+                System.out.println("Error while requesting transfer");
             }
         } else {
             newTransferId = jdbcTemplate.queryForObject(sql, Long.class, accountFrom.getAccountId(), accountTo.getAccountId(), amount, 3, 1);
@@ -132,13 +128,14 @@ public class JdbcTransferDao implements TransferDao {
                 jdbcTemplate.update(sql, 3, transferId);
             }
         } catch (DataAccessException e) {
-            System.out.println("omething went wrong while making transfer");
+            System.out.println("Error while accepting transfer");
         }
         return false;
     }
 
     @Override
     public boolean rejectRequest(long transferId) {
+
         String sql = "UPDATE transfer SET transfer_status_id = ?  WHERE transfer_id = ?";
         try {
             jdbcTemplate.update(sql, 3, transferId);
@@ -156,8 +153,9 @@ public class JdbcTransferDao implements TransferDao {
         transfer.setAccountFrom(rowSet.getLong("account_from"));
         transfer.setAccountTo(rowSet.getLong("account_to"));
         transfer.setAmount(rowSet.getBigDecimal("amount"));
-        transfer.setTransferType(rowSet.getString("transfer_type_desc"));
-        transfer.setTransferStatus(rowSet.getString("transfer_status_desc"));
+        transfer.setTransferTypeDesc(rowSet.getString("transfer_type_desc"));
+        transfer.setTransferStatusDesc(rowSet.getString("transfer_status_desc"));
+
         return transfer;
 
     }

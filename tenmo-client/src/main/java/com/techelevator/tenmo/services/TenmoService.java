@@ -12,22 +12,18 @@ import java.util.Scanner;
 
 public class TenmoService {
 
-
-    private final RestTemplate restTemplate = new RestTemplate();
-    ConsoleService consoleService = new ConsoleService();
-
-
-    AuthenticatedUser authenticatedUser;
-    AuthenticatedUser currentUser;
     public static final String API_BASE_URL = "http://localhost:8080/";
+    private final RestTemplate restTemplate = new RestTemplate();
+//    ConsoleService consoleService = new ConsoleService();
+//    AuthenticatedUser authenticatedUser;
+//    AuthenticatedUser currentUser;
+
     private String authToken = null;
 
 //    public TenmoService(AuthenticatedUser authenticatedUser, String API_BASE_URL) {
 //        this.authenticatedUser = authenticatedUser;
 //        API_BASE_URL = url;
 //    }
-
-
     public void setAuthToken(String authToken) {
         this.authToken = authToken;
     }
@@ -111,9 +107,6 @@ public class TenmoService {
         return listOfTransfers;
     }
 
-
-
-
     public Transfer[] getAllPendingTransfers() {
         Transfer[] listOfTransfers = null;
         try {
@@ -122,7 +115,6 @@ public class TenmoService {
                     HttpMethod.GET,
                     makeAuthEntity(),
                     Transfer[].class).getBody();
-
         } catch (RestClientResponseException | ResourceAccessException e) {
             System.out.println("Error! Pending transfers not found");
         }
@@ -130,7 +122,7 @@ public class TenmoService {
     }
 
 
-    public Transfer[] getPendingTransfers() {
+ /*   public Transfer[] getPendingTransfers() {
         Transfer[] listOfPendingTransfers = null;
         try {
             listOfPendingTransfers = restTemplate.exchange(
@@ -138,43 +130,13 @@ public class TenmoService {
                     HttpMethod.GET,
                     makeAuthEntity(),
                     Transfer[].class).getBody();
-//            long currentAccountId = getAccountById(currentUser.getUser().getId()).getAccountId();
-//            for (Transfer transfer : listOfPendingTransfers) {
-//                String usernameTo = username(transfer.getAccountToUsername());
-//                String usernameFrom = username(transfer.getAccountFromUsername());
-//                if (transfer.getAccountFromUsername() == currentAccountId) {
-//                    System.out.println(transfer.getTransferId() + "To: " + usernameTo + transfer.getAmount());
-//                } else if (transfer.getAccountToUsername() == currentAccountId) {
-//                    System.out.println(transfer.getTransferId() + "From: " + usernameFrom + transfer.getAmount());
-//                }
-//            }
-//
-//            System.out.println("---------");
-//            System.out.println("Please enter transfer ID to approve/reject (0 to cancel):\"");
-//            int menuSelection = consoleService.promptForMenuSelection("Please make a choice :\"");
-//            System.out.println("1: Approve");
-//            System.out.println("2: Reject");
-//            System.out.println("0: Don't approve or reject");
-//            Transfer t = new Transfer();
-//                if (menuSelection == 1) {
-//                    acceptRequest(t.getTransferId(),t.getAccountToId(),t.getAmount());
-//                } else if ( menuSelection == 2) {
-//                    rejectRequest(t.getTransferId(),t.getAccountToId(),t.getAmount());
-//                } else {
-//                    consoleService.pause();
-//                }
-
-        } catch (RestClientResponseException | ResourceAccessException e) {
+          } catch (RestClientResponseException | ResourceAccessException e) {
             System.out.println("Error! Pending transfers not found");
         }
 
         return listOfPendingTransfers;
 
-    }
-
-
-
-
+    }*/
 
     public Transfer getTransferById(long transferId){
         Transfer transfer = null;
@@ -199,6 +161,7 @@ public class TenmoService {
                     makeTransferEntity(transferDTO),
                     Transfer.class).getBody();
         } catch (RestClientResponseException | ResourceAccessException e) {
+         e.printStackTrace();
             System.out.println("Error! Unable to make a transfer");
         }
         return transfer;
@@ -251,20 +214,18 @@ public class TenmoService {
                     HttpMethod.GET,
                     makeAuthEntity(),
                     String.class).getBody();
-
         } catch (RestClientResponseException | ResourceAccessException e) {
             System.out.println("Error in retrieving username");
         }
         return username;
     }
 
-    private HttpEntity<Transfer> makeTransferEntity(Transfer transfer) {
+  /*  private HttpEntity<Transfer> makeTransferEntity(Transfer transfer) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setBearerAuth(authToken);
         return new HttpEntity<>(transfer, headers);
-    }
-
+    }*/
 
     private HttpEntity<Void> makeAuthEntity() {
         HttpHeaders headers = new HttpHeaders();
@@ -282,4 +243,3 @@ public class TenmoService {
     }
 
 }
-
