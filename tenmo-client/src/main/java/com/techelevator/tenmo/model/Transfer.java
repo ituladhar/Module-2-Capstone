@@ -3,51 +3,15 @@ package com.techelevator.tenmo.model;
 import java.math.BigDecimal;
 
 public class Transfer {
-
-
     private long transferId;
-
-
     private long transferTypeId;
-
-
     private long transferStatusId;
-
-
     private String transferType;
-
-
     private String transferStatus;
-
-
-    private long accountFromId;
-
-
-    private long accountToId;
-
-
-    private long accountFromUsername;
-
-
-    private long accountToUsername;
-
-
+    private long accountFrom;
+    private long accountTo;
     private BigDecimal amount;
 
-
-    private long fromUserId;
-
-
-    private long toUserId;
-
-    public Transfer(long transferId, long accountFromUsername, long accountToUsername, BigDecimal amount, String transferType, String transferStatus) {
-        this.transferId = transferId;
-        this.transferType = transferType;
-        this.transferStatus = transferStatus;
-        this.accountFromUsername = accountFromUsername;
-        this.accountToUsername = accountToUsername;
-        this.amount = amount;
-    }
     public Transfer() {}
 
     public long getTransferId() {
@@ -90,38 +54,20 @@ public class Transfer {
         this.transferStatus = transferStatus;
     }
 
-    public long getAccountFromId() {
-        return accountFromId;
+    public long getAccountFrom() {
+        return accountFrom;
     }
 
-    public void setAccountFromId(long accountFromId) {
-        this.accountFromId = accountFromId;
+    public void setAccountFrom(long accountFrom) {
+        this.accountFrom = accountFrom;
     }
 
-    public long getAccountToId() {
-        return accountToId;
+    public long getAccountTo() {
+        return accountTo;
     }
 
-    public void setAccountToId(long accountToId) {
-        this.accountToId = accountToId;
-    }
-
-
-    public long getAccountFromUsername() {
-
-        return accountFromUsername;
-    }
-
-    public void setAccountFromUsername(long accountFromUsername) {
-        this.accountFromUsername = accountFromUsername;
-    }
-
-    public long getAccountToUsername() {
-        return accountToUsername;
-    }
-
-    public void setAccountToUsername(long accountToUsername) {
-        this.accountToUsername = accountToUsername;
+    public void setAccountTo(long accountTo) {
+        this.accountTo = accountTo;
     }
 
     public BigDecimal getAmount() {
@@ -137,18 +83,11 @@ public class Transfer {
     public String toString() {
         return "Transfer{" +
                 "transferId=" + transferId +
-                ", transferTypeId=" + transferTypeId +
-                ", transferStatusId=" + transferStatusId +
                 ", transferType='" + transferType + '\'' +
                 ", transferStatus='" + transferStatus + '\'' +
-                ", accountFromId=" + accountFromId +
-                ", accountToId=" + accountToId +
-                ", accountFromUsername='" + accountFromUsername + '\'' +
-                ", accountToUsername='" + accountToUsername + '\'' +
-                ", amount=" + amount +
-                '}';
+                "\nFrom: " + accountFrom +
+                "\nTo: " + accountTo +
+                "\nAmount: $" + amount;
     }
-
-
 }
 

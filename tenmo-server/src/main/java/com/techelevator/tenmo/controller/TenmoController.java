@@ -19,22 +19,16 @@ import java.security.Principal;
 import java.util.List;
 
 @RestController
-@RequestMapping ("/users")
+//@RequestMapping ("/users")
+@RequestMapping ()
 @PreAuthorize("isAuthenticated()")
 public class TenmoController {
     @Autowired
-    private UserDao userDao;
+    UserDao userDao;
     @Autowired
-    private AccountDao accountDao;
+    AccountDao accountDao;
     @Autowired
-    private TransferDao transferDao;
-
-    public TenmoController(UserDao userdao, AccountDao accountDao, TransferDao transferDao) {
-        this.userDao = userdao;
-        this.accountDao = accountDao;
-        this.transferDao = transferDao;
-    }
-
+    TransferDao transferDao;
 
    /* @GetMapping()
     public List<User> listUsers() {
@@ -59,7 +53,7 @@ public class TenmoController {
         return userDao.findIdByAccountID(id);
     }
 
-    @GetMapping()
+    @GetMapping("users")
     public List<User>getAllUsers(Principal principal){
         String username = principal.getName();
         long userID = userDao.findIdByUsername(username);
@@ -139,44 +133,6 @@ public class TenmoController {
     public String username (@PathVariable long accountId){
         return userDao.findUserByAccountID(accountId);
     }
-
-
-/*    @PutMapping ( path = "/transfers")
-    public void transfer(@RequestBody Transfer transfer) {
-        transferDao.transferMoney(transfer);
-    }
-
-    @PostMapping ( path = "/transfers/requests")
-    public Transfer requestMoney(@RequestBody Transfer transfer) {
-
-        return transferDao.createTransfer(transfer);
-
-    }
-
-
-    //Fixed: Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'requestMappingHandlerMapping' defined in class path resource [org/springframework/boot/autoconfigure/web/servlet/WebMvcAutoConfiguration$EnableWebMvcConfiguration.class]: Invocation of init method failed; nested exception is java.lang.IllegalStateException: Ambiguous mapping. Cannot map 'tenmoController' method
-    //com.techelevator.tenmo.controller.TenmoController#viewPendin      gTransferRequests
-    @GetMapping (path = "/transfers/{id}")
-    public List<Transfer> viewTransfers(@PathVariable int userId) throws TransferNotFoundException {
-        return transferDao.viewTransfers(userId);
-    }
-
-
-
-    @GetMapping (path = "/transfers/{id}/pending")
-    public List<Transfer> viewPendingTransferRequests(@PathVariable int id) throws TransferNotFoundException {
-        return transferDao.viewPendingTransfer(id);
-    }
-
-    @PutMapping (path = "/transfers/requests")
-    public void approveOrRejectTransfer(@RequestBody Transfer transfer) {
-        if (transfer.getTransferStatusId() == 2) {
-            transferDao.updateBalanceRequest(transfer);
-            transferDao.updateBalanceSend(transfer);
-        }
-        transferDao.updateTransfer(transfer);
-    }*/
-
 
     @RequestMapping(path = "/whoami")
     public String whoAmI(Principal principal) {

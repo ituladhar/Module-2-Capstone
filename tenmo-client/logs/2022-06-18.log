@@ -1,0 +1,5 @@
+2022-06-18T12:48:08.611283 404 : [{"timestamp":"2022-06-18T16:48:08.554+00:00","status":404,"error":"Not Found","message":"No message available","path":"/balance/"}]
+2022-06-18T13:06:47.828564 404 : [{"timestamp":"2022-06-18T17:06:47.790+00:00","status":404,"error":"Not Found","message":"No message available","path":"/balance/"}]
+2022-06-18T13:11:13.325966 404 : [{"timestamp":"2022-06-18T17:11:13.292+00:00","status":404,"error":"Not Found","message":"No message available","path":"/balance/"}]
+2022-06-18T13:39:36.439182 404 : [{"timestamp":"2022-06-18T17:39:36.415+00:00","status":404,"error":"Not Found","message":"No message available","path":"/balance/"}]
+2022-06-18T13:51:20.432322 500 : [{"timestamp":"2022-06-18T17:51:20.396+00:00","status":500,"error":"Internal Server Error","message":"PreparedStatementCallback; bad SQL grammar [SELECT balance FROM accountWHERE user_id = ?;]; nested exception is org.postgresql.util.PSQLException: ERROR: syntax error at or near \"=\"\n  Position: 42","path":"/balance/"}]

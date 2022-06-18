@@ -94,17 +94,17 @@ public class TenmoService {
                     HttpMethod.GET,
                     makeAuthEntity(),
                     Transfer[].class).getBody();
-
-            long currentAccountId = getAccountById(currentUser.getUser().getId()).getAccountId();
-            for (Transfer transfer : listOfTransfers) {
-                String usernameTo = username(transfer.getAccountToUsername());
-                String usernameFrom = username(transfer.getAccountFromUsername());
-                if (transfer.getAccountFromUsername() == currentAccountId) {
-                    System.out.println(transfer.getTransferId() + "To: " + usernameTo + transfer.getAmount());
-                } else if (transfer.getAccountToUsername() == currentAccountId) {
-                    System.out.println(transfer.getTransferId() + "From: " + usernameFrom + transfer.getAmount());
-                }
-            }
+//
+//            long currentAccountId = getAccountById(currentUser.getUser().getId()).getAccountId();
+//            for (Transfer transfer : listOfTransfers) {
+//                String usernameTo = username(transfer.getAccountToUsername());
+//                String usernameFrom = username(transfer.getAccountFromUsername());
+//                if (transfer.getAccountFromUsername() == currentAccountId) {
+//                    System.out.println(transfer.getTransferId() + "To: " + usernameTo + transfer.getAmount());
+//                } else if (transfer.getAccountToUsername() == currentAccountId) {
+//                    System.out.println(transfer.getTransferId() + "From: " + usernameFrom + transfer.getAmount());
+//                }
+//            }
         } catch (RestClientResponseException | ResourceAccessException e) {
             System.out.println("Error! Approved transfers not found");
         }
@@ -138,31 +138,31 @@ public class TenmoService {
                     HttpMethod.GET,
                     makeAuthEntity(),
                     Transfer[].class).getBody();
-            long currentAccountId = getAccountById(currentUser.getUser().getId()).getAccountId();
-            for (Transfer transfer : listOfPendingTransfers) {
-                String usernameTo = username(transfer.getAccountToUsername());
-                String usernameFrom = username(transfer.getAccountFromUsername());
-                if (transfer.getAccountFromUsername() == currentAccountId) {
-                    System.out.println(transfer.getTransferId() + "To: " + usernameTo + transfer.getAmount());
-                } else if (transfer.getAccountToUsername() == currentAccountId) {
-                    System.out.println(transfer.getTransferId() + "From: " + usernameFrom + transfer.getAmount());
-                }
-            }
-
-            System.out.println("---------");
-            System.out.println("Please enter transfer ID to approve/reject (0 to cancel):\"");
-            int menuSelection = consoleService.promptForMenuSelection("Please make a choice :\"");
-            System.out.println("1: Approve");
-            System.out.println("2: Reject");
-            System.out.println("0: Don't approve or reject");
-            Transfer t = new Transfer();
-                if (menuSelection == 1) {
-                    acceptRequest(t.getTransferId(),t.getAccountToId(),t.getAmount());
-                } else if ( menuSelection == 2) {
-                    rejectRequest(t.getTransferId(),t.getAccountToId(),t.getAmount());
-                } else {
-                    consoleService.pause();
-                }
+//            long currentAccountId = getAccountById(currentUser.getUser().getId()).getAccountId();
+//            for (Transfer transfer : listOfPendingTransfers) {
+//                String usernameTo = username(transfer.getAccountToUsername());
+//                String usernameFrom = username(transfer.getAccountFromUsername());
+//                if (transfer.getAccountFromUsername() == currentAccountId) {
+//                    System.out.println(transfer.getTransferId() + "To: " + usernameTo + transfer.getAmount());
+//                } else if (transfer.getAccountToUsername() == currentAccountId) {
+//                    System.out.println(transfer.getTransferId() + "From: " + usernameFrom + transfer.getAmount());
+//                }
+//            }
+//
+//            System.out.println("---------");
+//            System.out.println("Please enter transfer ID to approve/reject (0 to cancel):\"");
+//            int menuSelection = consoleService.promptForMenuSelection("Please make a choice :\"");
+//            System.out.println("1: Approve");
+//            System.out.println("2: Reject");
+//            System.out.println("0: Don't approve or reject");
+//            Transfer t = new Transfer();
+//                if (menuSelection == 1) {
+//                    acceptRequest(t.getTransferId(),t.getAccountToId(),t.getAmount());
+//                } else if ( menuSelection == 2) {
+//                    rejectRequest(t.getTransferId(),t.getAccountToId(),t.getAmount());
+//                } else {
+//                    consoleService.pause();
+//                }
 
         } catch (RestClientResponseException | ResourceAccessException e) {
             System.out.println("Error! Pending transfers not found");
@@ -219,11 +219,6 @@ public class TenmoService {
         }
         return transfer;
     }
-
-
-
-
-
     public boolean acceptRequest(long transferId, long accountToId, BigDecimal amount){
         TransferDTO transferDTO = new TransferDTO(accountToId, amount);
         try {
@@ -262,117 +257,6 @@ public class TenmoService {
         }
         return username;
     }
-
-
- /*   public BigDecimal getBalance( int id) {
-        BigDecimal balance = null;
-         try {
-             ResponseEntity<BigDecimal> response = restTemplate.exchange(API_BASE_URL+id, HttpMethod.GET, makeAuthEntity(),BigDecimal.class);
-                 balance = response.getBody();
-         } catch (RestClientResponseException | ResourceAccessException e) {
-             BasicLogger.log(e.getMessage());
-
-         }
-        return balance;
-
-    }
-
-
-
-
-    public Transfer[] transfer () {
-        Transfer[] transfers = null;
-        try {
-            ResponseEntity<Transfer[]> response = restTemplate.exchange(API_BASE_URL, HttpMethod.GET, makeAuthEntity(),Transfer[].class);
-            transfers = response.getBody();
-        } catch (RestClientResponseException | ResourceAccessException e) {
-            BasicLogger.log(e.getMessage());
-
-        }
-        return transfers;
-
-    }
-
-    public Transfer requestMoney (Transfer transfer) {
-
-        HttpEntity<Transfer> entity = makeTransferEntity(transfer);
-        Transfer returnedTransfer = null;
-        try {
-            ResponseEntity<Transfer> response = restTemplate.exchange(API_BASE_URL + "?requests=" + transfer, HttpMethod.GET, makeAuthEntity(), Transfer.class);
-        } catch (RestClientResponseException | ResourceAccessException e) {
-            BasicLogger.log(e.getMessage());
-            System.out.println(e.getMessage());
-        }
-        return transfer;
-    }
-
-
-    public Transfer sendMoney (Transfer newTransfer) {
-        HttpEntity<Transfer> entity = makeTransferEntity(newTransfer);
-        Transfer returnedTransfer = null;
-        try {
-            returnedTransfer = restTemplate.postForObject(API_BASE_URL, entity, Transfer.class);
-        } catch (RestClientResponseException | ResourceAccessException e) {
-            BasicLogger.log(e.getMessage());
-            System.out.println(e.getMessage());
-        }
-        return returnedTransfer;
-
-
-    }
-
-
-    public Transfer[] viewTransfers ( int id) {
-
-        Transfer[] transfers = null;
-        try {
-            ResponseEntity<Transfer[]> response =
-                    restTemplate.exchange(API_BASE_URL + id, HttpMethod.GET,
-                            makeAuthEntity(), Transfer[].class);
-            transfers = response.getBody();
-        } catch (RestClientResponseException | ResourceAccessException e) {
-            BasicLogger.log(e.getMessage());
-
-        }
-        return transfers;
-
-    }
-
-
-    public Transfer[] viewPendingTransferRequests (int id) {
-
-        Transfer[] transfers = null;
-        try {
-            ResponseEntity<Transfer[]> response =
-                    restTemplate.exchange(API_BASE_URL + "id?pending="+ id, HttpMethod.GET,
-                            makeAuthEntity(), Transfer[].class);
-            transfers = response.getBody();
-        } catch (RestClientResponseException | ResourceAccessException e) {
-            BasicLogger.log(e.getMessage());
-
-        }
-        return transfers;
-
-    }
-
-    public boolean approveOrRejectTransfer(int transferStatusId) {
-
-        boolean success = false;
-        try {
-            ResponseEntity<Transfer[]> response =
-                    restTemplate.exchange(API_BASE_URL + "?request="+ transferStatusId , HttpMethod.GET,
-                            makeAuthEntity(), Transfer[].class);
-            success = true;
-        } catch (RestClientResponseException | ResourceAccessException e) {
-            BasicLogger.log(e.getMessage());
-
-        }
-        return success;
-
-
-    }
-*/
-
 
     private HttpEntity<Transfer> makeTransferEntity(Transfer transfer) {
         HttpHeaders headers = new HttpHeaders();
