@@ -32,6 +32,7 @@ public class App {
         }
     }
 
+    // Method to handle the Login at the Menu Level
     private void loginMenu() {
         int menuSelection = -1;
         while (menuSelection != 0 && currentUser == null) {
@@ -48,6 +49,8 @@ public class App {
         }
     }
 
+
+// Method to handle the registration process
     private void handleRegister() {
         System.out.println("Please register a new user account");
         UserCredentials credentials = consoleService.promptForCredentials();
@@ -58,6 +61,8 @@ public class App {
         }
     }
 
+
+    // Method to handle the Login process with authentication
     private void handleLogin() {
         UserCredentials credentials = consoleService.promptForCredentials();
         currentUser = authenticationService.login(credentials);
@@ -67,6 +72,10 @@ public class App {
         tenmoService.setAuthToken(currentUser.getToken());
     }
 
+
+
+
+    // Main Menu
     private void mainMenu() {
         int menuSelection = -1;
         while (menuSelection != 0) {
@@ -92,35 +101,19 @@ public class App {
     }
 
 
+    // Method to print the current Balance
     private void viewCurrentBalance() {
-        // Your current account balance is: $9999.99
+
         // TODO Auto-generated method stub
         System.out.println("Your current balance is: $" + tenmoService.getAccountBalance());
     }
 
+
+
+    // Method to view the history of the transfer per user
     private void viewTransferHistory() {
         // TODO Auto-generated method stub
 
-     /*   System.out.println("-------------------------------------------");
-        System.out.println("Transfers");
-        System.out.println("ID \t\t\t From/To \t\t\t   Amount");
-        System.out.println("-------------------------------------------");
-        tenmoService.getAllTransfers();*/
-
-//        tenmoService.getAccountById(currentUser.getUser().getId());
-////        tenmoService.getAccountById(currentUser.getUser().getId());
-
-//        Transfer[] listOfTransfers = tenmoService.getAllTransfers();
-//        long currentAccountId = tenmoService.getAccountById(currentUser.getUser().getId()).getAccountId();
-//        for (Transfer transfer : listOfTransfers) {
-//            String usernameTo = tenmoService.username(transfer.getAccountToUsername());
-//            String usernameFrom = tenmoService.username(transfer.getAccountFromUsername());
-//            if (transfer.getAccountFromUsername() == currentAccountId) {
-//                System.out.println(transfer.getTransferId() + "To: " + usernameTo + transfer.getAmount());
-//            } else if (transfer.getAccountToUsername() == currentAccountId) {
-//                System.out.println(transfer.getTransferId() + "From: " + usernameFrom + transfer.getAmount());
-//            }
-//        }
         boolean viewHistory = true;
         while (viewHistory) {
             Transfer[] listOfTransfers = tenmoService.getAllTransfers();
@@ -166,6 +159,8 @@ public class App {
         }
     }
 
+
+    // Method to print the list of pending requests
     private void viewPendingRequests() {
         boolean checkPendingRequest = true;
         while (checkPendingRequest) {
@@ -197,7 +192,7 @@ public class App {
         }
     }
 
-    //
+    // // Method to print the list of pending options
     private void viewPendingOptions(long id) {
         Transfer transfer = tenmoService.getTransferById(id);
         BigDecimal amount = transfer.getAmount();
@@ -237,19 +232,11 @@ public class App {
             }
         }
     }
-    //
 
-  /*      private void viewPendingRequests () {
-            // TODO Auto-generated method stub
 
-            System.out.println("-------------------------------------------");
-            System.out.println("Pending Transfers");
-            System.out.println("ID \t\t\t From/To \t\t\t   Amount");
-            System.out.println("-------------------------------------------");
-            tenmoService.getAllPendingTransfers();
 
-        }*/
 
+    // // Method to print the list of send the money
         private void sendBucks () {
             // TODO Auto-generated method stub
             boolean checkSendMoney = true;
@@ -278,6 +265,10 @@ public class App {
             }
         }
 
+
+
+
+        // // Method to request money
         private void requestBucks () {
             // TODO Auto-generated method stub
             boolean checkRequest = true;
@@ -306,6 +297,7 @@ public class App {
                 }
             }
         }
+
 
     }
 

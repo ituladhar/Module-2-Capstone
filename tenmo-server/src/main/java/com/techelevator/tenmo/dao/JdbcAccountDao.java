@@ -8,10 +8,11 @@ import java.math.BigDecimal;
 import javax.sql.DataSource;
 
 
-@Component // Fixed:required a bean of type 'com.techelevator.tenmo.dao.AccountDao' that could not be found.
+@Component
 public class JdbcAccountDao implements AccountDao {
 
     private JdbcTemplate jdbcTemplate;
+
 
     public JdbcAccountDao(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
@@ -22,6 +23,8 @@ public class JdbcAccountDao implements AccountDao {
         String sql = "SELECT balance FROM account WHERE user_id = ?;";
         return jdbcTemplate.queryForObject(sql, BigDecimal.class, userId);
     }
+
+
 
     @Override
     public Account getAnAccountByUserId(long userId) {
@@ -34,6 +37,8 @@ public class JdbcAccountDao implements AccountDao {
         return account;
     }
 
+
+
     @Override
     public void addBalance(BigDecimal amount, long userId) {
         String sql = "UPDATE account SET balance = balance + ? "+
@@ -42,6 +47,8 @@ public class JdbcAccountDao implements AccountDao {
 
 
     }
+
+
 
     @Override
     public boolean subtractBalance(BigDecimal amount, long userId) {
@@ -59,7 +66,8 @@ public class JdbcAccountDao implements AccountDao {
         }
     }
 
-    // SqlRowSet Object Mapper :)
+
+
     private Account accountObjectMapper(SqlRowSet results) {
         Account account = new Account();
         account.setAccountId(results.getLong("account_id"));

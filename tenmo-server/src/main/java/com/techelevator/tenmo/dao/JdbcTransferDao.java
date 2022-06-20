@@ -17,7 +17,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-@Component // constructor in com.techelevator.tenmo.controller.TenmoController required a bean of type 'com.techelevator.tenmo.dao.TransferDao' that could not be found.
+@Component
 public class JdbcTransferDao implements TransferDao {
 
     private JdbcTemplate jdbcTemplate;
@@ -30,6 +30,7 @@ public class JdbcTransferDao implements TransferDao {
         this.accountDao = new JdbcAccountDao(dataSource);
     }
 
+    // List of approved transfers
     @Override
     public List<Transfer> getAllApprovedTransfers(long accountId) {
         List<Transfer> transfers = new ArrayList<>();
@@ -44,6 +45,8 @@ public class JdbcTransferDao implements TransferDao {
         return transfers;
     }
 
+
+// List of all pending transfers
     @Override
     public List<Transfer> getAllPendingTransfers(long accountId) {
         List<Transfer> transfers = new ArrayList<>();
@@ -58,6 +61,9 @@ public class JdbcTransferDao implements TransferDao {
         return transfers;
     }
 
+
+
+    // Method to get the transfer by Id
     @Override
     public Transfer getTransferById(long transferId) {
         Transfer transfer = new Transfer();
@@ -72,6 +78,9 @@ public class JdbcTransferDao implements TransferDao {
         return transfer;
     }
 
+
+
+// Create a new transfer
     @Override
     public Transfer newTransfer(long userFrom, long userTo, BigDecimal amount) {
         String sql = "INSERT INTO transfer (account_from, account_to, amount, transfer_status_id, transfer_type_id) " +
@@ -96,6 +105,10 @@ public class JdbcTransferDao implements TransferDao {
         return getTransferById(newTransferId);
     }
 
+
+
+
+    // Make a new request
     @Override
     public Transfer newRequest(long userFrom, long userTo, BigDecimal amount) {
         String sql = "INSERT INTO transfer (account_from, account_to, amount, transfer_status_id, transfer_type_id) "+
@@ -116,6 +129,9 @@ public class JdbcTransferDao implements TransferDao {
         return getTransferById(newTransferId);
     }
 
+
+
+// Method to accept or request a transfer
     @Override
     public boolean acceptRequest(long userFrom, long userTo, BigDecimal amount, long transferId) {
         String sql = "UPDATE transfer SET transfer_status_id = ?  WHERE transfer_id = ?";
@@ -133,6 +149,9 @@ public class JdbcTransferDao implements TransferDao {
         return false;
     }
 
+
+
+
     @Override
     public boolean rejectRequest(long transferId) {
 
@@ -145,6 +164,7 @@ public class JdbcTransferDao implements TransferDao {
         }
         return false;
     }
+
 
 
     private Transfer mapRowToTransfer(SqlRowSet rowSet) {

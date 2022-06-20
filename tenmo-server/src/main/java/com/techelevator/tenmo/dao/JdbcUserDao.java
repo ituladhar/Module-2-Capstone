@@ -24,6 +24,8 @@ public class JdbcUserDao implements UserDao {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
+
+    // Find a user Id by account Id
     @Override
     public long findIdByAccountID(long accountId){
         String sql = "SELECT user_id "+
@@ -33,6 +35,8 @@ public class JdbcUserDao implements UserDao {
         return userId;
     }
 
+
+    // Find a user by account ID
     @Override
     public String findUserByAccountID(long accountId){
         String sql = "SELECT username FROM tenmo_user "+
@@ -42,6 +46,8 @@ public class JdbcUserDao implements UserDao {
         return username;
     }
 
+
+    // Find a user ID by its uername
     @Override
     public long findIdByUsername(String username) {
         String sql = "SELECT user_id "+
@@ -55,6 +61,8 @@ public class JdbcUserDao implements UserDao {
         }
     }
 
+
+    // Find all of the users
     @Override
     public List<User> findAll(long userId) {
         List<User> users = new ArrayList<>();
@@ -69,6 +77,9 @@ public class JdbcUserDao implements UserDao {
         return users;
     }
 
+
+    // Find a user by its username
+
     @Override
     public User findByUsername(String username) throws UsernameNotFoundException {
         String sql = "SELECT user_id, username, password_hash "+
@@ -81,6 +92,8 @@ public class JdbcUserDao implements UserDao {
         throw new UsernameNotFoundException("User " + username + " was not found.");
     }
 
+
+    // Create an account and a user
     @Override
     public boolean create(String username, String password) {
         // Create User Info
@@ -103,6 +116,8 @@ public class JdbcUserDao implements UserDao {
         return true;
     }
 
+
+    // Map the table
     private User mapRowToUser(SqlRowSet rowSet) {
         User user = new User();
         user.setId(rowSet.getLong("user_id"));
