@@ -29,10 +29,6 @@ public class TenmoController {
     @Autowired
     TransferDao transferDao;
 
-   /* @GetMapping()
-    public List<User> listUsers() {
-        return userDao.findAll();
-    }*/
 
     @GetMapping("/balance")
     public BigDecimal getAccountBalance(Principal principal){
@@ -143,8 +139,6 @@ public class TenmoController {
     @RequestMapping("/whoami")
     public String whoAmI(Principal principal) {
         return principal.getName();
-
     }
-
 
 }

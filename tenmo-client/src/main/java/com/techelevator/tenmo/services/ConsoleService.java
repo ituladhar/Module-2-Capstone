@@ -6,18 +6,18 @@ import com.techelevator.tenmo.model.UserCredentials;
 import java.awt.*;
 import java.math.BigDecimal;
 import java.util.Scanner;
+import java.io.Console;
 
 public class ConsoleService  {
+
     // Define color constants
     public static final String TEXT_RESET = "\u001B[0m";
-    public static final String TEXT_BLACK = "\u001B[30m";
     public static final String TEXT_RED = "\u001B[31m";
     public static final String TEXT_GREEN = "\u001B[32m";
     public static final String TEXT_YELLOW = "\u001B[33m";
     public static final String TEXT_BLUE = "\u001B[34m";
     public static final String TEXT_PURPLE = "\u001B[35m";
     public static final String TEXT_CYAN = "\u001B[36m";
-    public static final String TEXT_WHITE = "\u001B[37m";
 
     private final Scanner scanner = new Scanner(System.in);
 
@@ -33,20 +33,22 @@ public class ConsoleService  {
     }
 
     public void printGreeting() {
-        System.out.println(TEXT_PURPLE + "╔═══════════════════════════════════════════╗" + TEXT_RESET);
-        System.out.println(TEXT_PURPLE + "║    ««««««««««««««««»»»»»»»»»»»»»»»»»»     ║" + TEXT_RESET);
-        System.out.println(TEXT_PURPLE + "║"+"\t\t\t*" + TEXT_RESET +" Welcome to "+ TEXT_RED +"T"+ TEXT_BLUE +"E" + TEXT_RESET + "nmo! "+TEXT_PURPLE+"*\t\t\t║" + TEXT_RESET);
-        System.out.println(TEXT_PURPLE + "║    ««««««««««««««««»»»»»»»»»»»»»»»»»»     ║" + TEXT_RESET);
-        System.out.println(TEXT_PURPLE + "╚═══════════════════════════════════════════╝" + TEXT_RESET);
+        System.out.println("\t\t" + TEXT_PURPLE + "╔═══════════════════════════════════════════╗" + TEXT_RESET);
+        System.out.println("\t\t" + TEXT_PURPLE + "║    ««««««««««««««««»»»»»»»»»»»»»»»»»»     ║" + TEXT_RESET);
+        System.out.println("\t\t" + TEXT_PURPLE + "║"+"\t\t\t*" + TEXT_RESET +" Welcome to "+ TEXT_RED +"T"+ TEXT_BLUE +"E" + TEXT_RESET + "nmo! "+TEXT_PURPLE+"*\t\t\t║" + TEXT_RESET);
+        System.out.println("\t\t" + TEXT_PURPLE + "║    ««««««««««««««««»»»»»»»»»»»»»»»»»»     ║" + TEXT_RESET);
+        System.out.println("\t\t" + TEXT_PURPLE + "╚═══════════════════════════════════════════╝" + TEXT_RESET);
 
     }
 
     public void printLoginMenu() {
         System.out.println();
-        System.out.println("\t\t1: "+ TEXT_BLUE +"Register" + TEXT_RESET);
-        System.out.println( "\t\t2: "+ TEXT_GREEN +"Login" + TEXT_RESET);
-        System.out.println("\t\t0: " +TEXT_RED + "Exit"+ TEXT_RESET);
+        System.out.println("\t\t\t\t1: "+ TEXT_BLUE +"Register" + TEXT_RESET);
+        System.out.println( "\t\t\t\t2: "+ TEXT_GREEN +"Login" + TEXT_RESET);
+        System.out.println("\t\t\t\t0: " +TEXT_RED + "Exit"+ TEXT_RESET);
         System.out.println();
+
+
     }
 
     public void printMainMenu() {
@@ -61,8 +63,10 @@ public class ConsoleService  {
     }
 
     public UserCredentials promptForCredentials() {
-        String username = promptForString(TEXT_YELLOW + "\t\tUsername: ");
-        String password = promptForString("\t\tPassword: " + TEXT_RESET);
+        System.out.println("\t\t\t\t" + TEXT_PURPLE + "══════════════════════════════════════════" + TEXT_RESET);
+        String username = promptForString(TEXT_YELLOW + "\t\t\t\t\t\tUsername: ");
+        String password = promptForString("\t\t\t\t\t\tPassword: " + TEXT_RESET);
+        System.out.println("\t\t\t\t" + TEXT_PURPLE + "═══════════════════════════════════════════" + TEXT_RESET);
         // char[] passString = Console.readPassword();
         //    String pass = new String(passString );
         return new UserCredentials(username, password);
@@ -101,36 +105,35 @@ public class ConsoleService  {
     }
 
     public void printErrorMessage() {
-        System.out.println("\t\tAn error occurred. Check the log for details.");
+        border();
+        System.out.println("\t\t««««" + TEXT_RED + "An error occurred. Check the log for details." + TEXT_RESET +" »»»»");
     }
-   /* public void border(){
-        System.out.println(TEXT_PURPLE + "-----------------------------------" + TEXT_RESET);
-    }*/
+
     public void border(){
         System.out.println(TEXT_PURPLE + "▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬" + TEXT_RESET);
            }
 
     public void printPendingMenu(){
         System.out.println();
-        System.out.println("\t\t1: "+ TEXT_GREEN + "Approve" + TEXT_RESET);
-        System.out.println("\t\t2: "+ TEXT_RED + "Reject" + TEXT_RESET);
-        System.out.println("\t\t0: Don't approve or reject");
+        System.out.println("\t\t\t\t1: "+ TEXT_GREEN + "Approve" + TEXT_RESET);
+        System.out.println("\t\t\t\t2: "+ TEXT_RED + "Reject" + TEXT_RESET);
+        System.out.println("\t\t\t\t0: Don't approve or reject\n\n");
         border();
         System.out.println();
     }
 
     public void viewTransferHistoryMenu() {
-        System.out.println(TEXT_RED + "\t\t    ««««««««««««««««»»»»»»»»»»»»»»»»»»     " + TEXT_RESET);
+        System.out.println(TEXT_RED + "\t\t\t    ««««««««««««««««»»»»»»»»»»»»»»»»»»     " + TEXT_RESET);
         System.out.println("\t\t «««««««««««««««« Transfer »»»»»»»»»»»»»»»»»» " + TEXT_RESET);
-        System.out.println(TEXT_BLUE + "\t\t    ««««««««««««««««»»»»»»»»»»»»»»»»»»     " + TEXT_RESET);
-        System.out.println(TEXT_CYAN + "\t\tID" + TEXT_GREEN + "\t\t  From "+ TEXT_CYAN +"/ "+TEXT_RED+"To" + TEXT_CYAN+"\t\t\tAmount" +TEXT_RESET);
+        System.out.println(TEXT_BLUE + "\t\t\t    ««««««««««««««««»»»»»»»»»»»»»»»»»»     " + TEXT_RESET);
+        System.out.println(TEXT_CYAN + "\t\t\tID" + TEXT_GREEN + "\t\t\t\tFrom "+ TEXT_CYAN +"/ "+TEXT_RED+"To" + TEXT_CYAN+"\t\t\t\tAmount" +TEXT_RESET);
     }
 
     public void viewPendingRequestsMenu(){
-        System.out.println(TEXT_RED + "\t\t    ««««««««««««««««»»»»»»»»»»»»»»»»»»     " + TEXT_RESET);
+        System.out.println(TEXT_RED + "\t\t\t    ««««««««««««««««»»»»»»»»»»»»»»»»»»     " + TEXT_RESET);
         System.out.println("\t\t «««««««««««««««« Pending Transfers »»»»»»»»»»»»»»»»»» " );
-        System.out.println(TEXT_BLUE + "\t\t    ««««««««««««««««»»»»»»»»»»»»»»»»»»     " + TEXT_RESET);
-               System.out.println(TEXT_CYAN +"\t\tID \t\tTo \t\t\tAmount" + TEXT_RESET);
+        System.out.println(TEXT_BLUE + "\t\t\t    ««««««««««««««««»»»»»»»»»»»»»»»»»»     " + TEXT_RESET);
+               System.out.println(TEXT_CYAN +"\t\t\t\tID \t\t\t\t\tTo \t\t\t\t Amount" + TEXT_RESET);
     }
 
 //    public void viewPendingOptionsMenu(){

@@ -59,11 +59,13 @@ public class App {
     }
 
     private void handleRegister() {
-        System.out.println("\t\tPlease register a new user account");
+        System.out.println(TEXT_RED + "\n\t\t\t\t\t««««««««««««««««»»»»»»»»»»»»»»»»»»     " + TEXT_RESET);
+        System.out.println("\t\t ««««««««««««« Please register a new user account »»»»»»»»»»»»»»» " + TEXT_RESET);
+        System.out.println(TEXT_BLUE + "\t\t\t\t\t««««««««««««««««»»»»»»»»»»»»»»»»»»     " + TEXT_RESET);
         UserCredentials credentials = consoleService.promptForCredentials();
         if (authenticationService.register(credentials)) {
             consoleService.border();
-            System.out.println("\n\t«««« Registration "+ TEXT_GREEN + "successful. " + TEXT_RESET +"You can now login.»»»» \n");
+            System.out.println("\n\n\n\t\t\t\t«««« Registration "+ TEXT_GREEN + "successful. " + TEXT_RESET +"You can now login.»»»» \n");
             consoleService.border();
         } else {
             consoleService.printErrorMessage();
@@ -72,11 +74,14 @@ public class App {
 
     private void handleLogin() {
         UserCredentials credentials = consoleService.promptForCredentials();
+
         currentUser = authenticationService.login(credentials);
         if (currentUser == null) {
             consoleService.printErrorMessage();
+        }else {
+            tenmoService.setAuthToken(currentUser.getToken());
         }
-        tenmoService.setAuthToken(currentUser.getToken());
+        consoleService.pause();
     }
     private void mainMenu() {
         int menuSelection = -1;
@@ -85,6 +90,7 @@ public class App {
             menuSelection = consoleService.promptForMenuSelection("\t\t»» Please choose an option: ");
             if (menuSelection == 1) {
                 viewCurrentBalance();
+
             } else if (menuSelection == 2) {
                 viewTransferHistory();
             } else if (menuSelection == 3) {
@@ -105,7 +111,7 @@ public class App {
 
     private void viewCurrentBalance() {
         consoleService.border();
-        System.out.println("\t\tYour current balance is: " + TEXT_CYAN +"$" + tenmoService.getAccountBalance());
+        System.out.println("\n\n\t\t\t\tYour current balance is: " + TEXT_CYAN +"$" + tenmoService.getAccountBalance() + "\n\n");
         consoleService.border();
     }
 
@@ -124,14 +130,14 @@ public class App {
                 String usernameTo = tenmoService.username(transfer.getAccountTo());
                 String usernameFrom = tenmoService.username(transfer.getAccountFrom());
                 if (transfer.getAccountFrom() == currentAccountId) {
-                    System.out.println("\t\t" + TEXT_BLUE + transfer.getTransferId() +
-                            TEXT_RED + "\tTo:\t\t" +
-                            TEXT_RESET + usernameTo + "\t" +
+                    System.out.println("\t\t\t" + TEXT_BLUE + transfer.getTransferId() +
+                            TEXT_RED + "\t\tTo:\t\t\t" +
+                            TEXT_RESET + usernameTo + "\t\t" +
                             TEXT_RED + transfer.getAmount());
                 } else if (transfer.getAccountTo() == currentAccountId) {
-                    System.out.println("\t\t" + TEXT_BLUE +transfer.getTransferId() +
-                            TEXT_GREEN +"\tFrom:\t" +
-                            TEXT_RESET + usernameFrom + "\t" +
+                    System.out.println("\t\t\t" + TEXT_BLUE +transfer.getTransferId() +
+                            TEXT_GREEN +"\t\tFrom:\t\t" +
+                            TEXT_RESET + usernameFrom + "\t\t" +
                             TEXT_GREEN + transfer.getAmount());
                 }
             }
@@ -146,16 +152,16 @@ public class App {
                     consoleService.pause();
                 } else {
                     consoleService.border();
-                    System.out.println(TEXT_RED + "\t\t    ««««««««««««««««»»»»»»»»»»»»»»»»»»     " + TEXT_RESET);
-                    System.out.println("\t\t «««««««««««««««« Transfer Details »»»»»»»»»»»»»»»»»» " );
-                    System.out.println(TEXT_BLUE + "\t\t    ««««««««««««««««»»»»»»»»»»»»»»»»»»     " + TEXT_RESET);
+                    System.out.println(TEXT_RED + "\t\t\t    ««««««««««««««««»»»»»»»»»»»»»»»»»»     " + TEXT_RESET);
+                    System.out.println("\t\t «««««««««««««««« Transfer Details »»»»»»»»»»»»»»»»»» " + TEXT_RESET);
+                    System.out.println(TEXT_BLUE + "\t\t\t    ««««««««««««««««»»»»»»»»»»»»»»»»»»     " + TEXT_RESET);
                     consoleService.border();
-                    System.out.println(TEXT_BLUE + "\t\tID:\t\t " + TEXT_RESET + transfer.getTransferId());
-                    System.out.println(TEXT_GREEN + "\t\tFrom:\t " + TEXT_RESET + tenmoService.username(transfer.getAccountFrom()));
-                    System.out.println(TEXT_RED + "\t\tTo:\t\t " + TEXT_RESET + tenmoService.username(transfer.getAccountTo()));
-                    System.out.println(TEXT_YELLOW + "\t\tType:\t " + transfer.getTransferTypeDesc());
-                    System.out.println(TEXT_CYAN + "\t\tStatus:\t " + transfer.getTransferStatusDesc());
-                    System.out.println(TEXT_PURPLE + "\t\tAmount:\t "+ TEXT_RESET + "$" + TEXT_RESET + transfer.getAmount());
+                    System.out.println(TEXT_BLUE + "\t\t\t\t\t\tID:\t\t " + TEXT_RESET + transfer.getTransferId());
+                    System.out.println(TEXT_GREEN + "\t\t\t\t\t\tFrom:\t " + TEXT_RESET + tenmoService.username(transfer.getAccountFrom()));
+                    System.out.println(TEXT_RED + "\t\t\t\t\t\tTo:\t\t " + TEXT_RESET + tenmoService.username(transfer.getAccountTo()));
+                    System.out.println(TEXT_YELLOW + "\t\t\t\t\t\tType:\t " + transfer.getTransferTypeDesc());
+                    System.out.println(TEXT_CYAN + "\t\t\t\t\t\tStatus:\t " + transfer.getTransferStatusDesc());
+                    System.out.println(TEXT_PURPLE + "\t\t\t\t\t\tAmount:\t "+ TEXT_RESET + "$" + TEXT_RESET + transfer.getAmount());
                     consoleService.border();
                     consoleService.pause();
                 }
@@ -173,7 +179,7 @@ public class App {
             Transfer[] pendingTransfers = tenmoService.getAllPendingTransfers();
             for (Transfer transfer : pendingTransfers) {
                 String usernameTo = tenmoService.username(transfer.getAccountTo());
-                System.out.println(TEXT_BLUE+"\t\t"+transfer.getTransferId() + "\t" + TEXT_YELLOW + usernameTo + "\t" + TEXT_CYAN +transfer.getAmount());
+                System.out.println(TEXT_BLUE+"\t\t\t\t"+transfer.getTransferId() + "\t\t\t" + TEXT_YELLOW + usernameTo + "\t\t\t" + TEXT_CYAN +transfer.getAmount());
             }
             consoleService.border();
 
@@ -200,12 +206,12 @@ public class App {
         System.out.println();
         consoleService.border();
         consoleService.border();
-        System.out.println(TEXT_BLUE + "\t\tID:\t\t" + TEXT_RESET + transfer.getTransferId());
-        System.out.println(TEXT_GREEN + "\t\tFrom:\t " + TEXT_RESET  + tenmoService.username(transfer.getAccountFrom()));
-        System.out.println(TEXT_RED + "\t\tTo:\t\t " + TEXT_RESET  + tenmoService.username(transfer.getAccountTo()));
-        System.out.println(TEXT_YELLOW + "\t\tType:\t " + transfer.getTransferTypeDesc());
-        System.out.println(TEXT_CYAN + "\t\tStatus:\t " + transfer.getTransferStatusDesc());
-        System.out.println(TEXT_PURPLE + "\t\tAmount:\t "+ TEXT_RESET +"$"  + transfer.getAmount());
+        System.out.println(TEXT_BLUE + "\t\t\t\tID:\t\t" + TEXT_RESET + transfer.getTransferId());
+        System.out.println(TEXT_GREEN + "\t\t\t\tFrom:\t " + TEXT_RESET  + tenmoService.username(transfer.getAccountFrom()));
+        System.out.println(TEXT_RED + "\t\t\t\tTo:\t\t " + TEXT_RESET  + tenmoService.username(transfer.getAccountTo()));
+        System.out.println(TEXT_YELLOW + "\t\t\t\tType:\t " + transfer.getTransferTypeDesc());
+        System.out.println(TEXT_CYAN + "\t\t\t\tStatus:\t " + transfer.getTransferStatusDesc());
+        System.out.println(TEXT_PURPLE + "\t\t\t\tAmount:\t "+ TEXT_RESET +"$"  + transfer.getAmount());
         consoleService.border();
         consoleService.border();
         boolean checkStatus = true;
@@ -237,11 +243,11 @@ public class App {
            boolean checkSendMoney = true;
            Transfer transfer = null;
            while (checkSendMoney) {
-                   System.out.println(TEXT_CYAN + "\t\tUsers ID\t" + TEXT_RESET + "Name");
+                   System.out.println(TEXT_CYAN + "\t\t\t\t\tUsers ID" + TEXT_CYAN + "\t\t\t\tName");
                    consoleService.border();
                    User[] listUsers = tenmoService.getAllUsers();
                    for (User user : listUsers) {
-                       System.out.println("\t\t" + TEXT_BLUE + user.getId() + TEXT_RESET + "\t\t" + user.getUsername());
+                       System.out.println("\t\t\t\t\t" + TEXT_BLUE + user.getId() + TEXT_RESET + "\t\t\t\t" + user.getUsername());
                    }
                    consoleService.border();
                    int id = consoleService.promptForInt("\t\t»» Enter the ID of user you are sending to (0 to cancel): ");
@@ -264,11 +270,11 @@ public class App {
             boolean checkRequest = true;
             Transfer transfer = null;
             while (checkRequest) {
-                System.out.println(TEXT_CYAN+ "\t\tUsers ID\t"+ TEXT_RESET + "Name");
+                System.out.println(TEXT_CYAN + "\t\t\t\t\tUsers ID" + TEXT_CYAN + "\t\t\tName");
                 consoleService.border();
                 User[] listUsers = tenmoService.getAllUsers();
                 for (User user : listUsers) {
-                    System.out.println("\t\t" + TEXT_BLUE + user.getId() + TEXT_RESET +"\t\t" + user.getUsername());
+                    System.out.println("\t\t\t\t\t" + TEXT_BLUE + user.getId() + TEXT_RESET + "\t\t\t\t" + user.getUsername());
                 }
                 consoleService.border();
 
@@ -283,6 +289,7 @@ public class App {
                     BigDecimal amount = consoleService.promptForBigDecimal("\t\t»» Enter amount in decimal: ");
                     transfer = tenmoService.makeRequest(id, amount);
                     System.out.println(transfer);
+                    consoleService.border();
                     checkRequest = false;
                 }
             }
