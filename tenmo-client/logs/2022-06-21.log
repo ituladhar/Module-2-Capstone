@@ -15,3 +15,4 @@
 2022-06-21T01:19:47.553557 500 : [{"timestamp":"2022-06-21T05:19:47.508+00:00","status":500,"error":"Internal Server Error","message":"Incorrect result size: expected 1, actual 2","path":"/balance/"}]
 2022-06-21T01:27:04.85281 401 : [no body]
 2022-06-21T01:38:08.250168 401 : [no body]
+2022-06-21T02:07:05.253425 401 : [no body]
