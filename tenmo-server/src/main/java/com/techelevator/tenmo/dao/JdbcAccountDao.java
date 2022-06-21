@@ -11,7 +11,7 @@ import javax.sql.DataSource;
 @Component
 public class JdbcAccountDao implements AccountDao {
 
-    private final JdbcTemplate jdbcTemplate;
+    private JdbcTemplate jdbcTemplate;
 
 
     public JdbcAccountDao(DataSource dataSource) {

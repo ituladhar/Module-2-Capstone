@@ -43,7 +43,6 @@ public class TenmoController {
     }
 
     @GetMapping("/account/{id}")
-
     public Account getAccountByUserId(@PathVariable long id){
         return accountDao.getAnAccountByUserId(id);
     }
@@ -112,7 +111,6 @@ public class TenmoController {
                 transferDTO.getAmount());
         return transfer;
     }
-
 
     @PutMapping("/transfer/{transferId}/accept")
     public boolean acceptTransfer(Principal principal,
