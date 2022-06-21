@@ -14,16 +14,10 @@ public class TenmoService {
 
     public static final String API_BASE_URL = "http://localhost:8080/";
     private final RestTemplate restTemplate = new RestTemplate();
-//    ConsoleService consoleService = new ConsoleService();
-//    AuthenticatedUser authenticatedUser;
-//    AuthenticatedUser currentUser;
 
     private String authToken = null;
 
-//    public TenmoService(AuthenticatedUser authenticatedUser, String API_BASE_URL) {
-//        this.authenticatedUser = authenticatedUser;
-//        API_BASE_URL = url;
-//    }
+
     public void setAuthToken(String authToken) {
         this.authToken = authToken;
     }
@@ -90,17 +84,7 @@ public class TenmoService {
                     HttpMethod.GET,
                     makeAuthEntity(),
                     Transfer[].class).getBody();
-//
-//            long currentAccountId = getAccountById(currentUser.getUser().getId()).getAccountId();
-//            for (Transfer transfer : listOfTransfers) {
-//                String usernameTo = username(transfer.getAccountToUsername());
-//                String usernameFrom = username(transfer.getAccountFromUsername());
-//                if (transfer.getAccountFromUsername() == currentAccountId) {
-//                    System.out.println(transfer.getTransferId() + "To: " + usernameTo + transfer.getAmount());
-//                } else if (transfer.getAccountToUsername() == currentAccountId) {
-//                    System.out.println(transfer.getTransferId() + "From: " + usernameFrom + transfer.getAmount());
-//                }
-//            }
+
         } catch (RestClientResponseException | ResourceAccessException e) {
             System.out.println("Error! Approved transfers not found");
         }
@@ -120,23 +104,6 @@ public class TenmoService {
         }
         return listOfTransfers;
     }
-
-
- /*   public Transfer[] getPendingTransfers() {
-        Transfer[] listOfPendingTransfers = null;
-        try {
-            listOfPendingTransfers = restTemplate.exchange(
-                    API_BASE_URL + "transfers/pending",
-                    HttpMethod.GET,
-                    makeAuthEntity(),
-                    Transfer[].class).getBody();
-          } catch (RestClientResponseException | ResourceAccessException e) {
-            System.out.println("Error! Pending transfers not found");
-        }
-
-        return listOfPendingTransfers;
-
-    }*/
 
     public Transfer getTransferById(long transferId){
         Transfer transfer = null;
@@ -166,8 +133,6 @@ public class TenmoService {
         }
         return transfer;
     }
-
-
 
     public Transfer makeRequest(long userFromId, BigDecimal amount) {
         TransferDTO transferDTO = new TransferDTO(userFromId, amount);
@@ -219,13 +184,6 @@ public class TenmoService {
         }
         return username;
     }
-
-  /*  private HttpEntity<Transfer> makeTransferEntity(Transfer transfer) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setBearerAuth(authToken);
-        return new HttpEntity<>(transfer, headers);
-    }*/
 
     private HttpEntity<Void> makeAuthEntity() {
         HttpHeaders headers = new HttpHeaders();
