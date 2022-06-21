@@ -6,7 +6,7 @@ Congratulations—you've landed a job with TEnmo, whose product is an online pay
 
 ### Required use cases
 
-You should attempt to complete all of the following required use cases.
+You should attempt to complete all the following required use cases.
 
 1. **[COMPLETE]** As a user of the system, I need to be able to register myself with a username and password.
    1. A new registered user starts with an initial balance of 1,000 TE Bucks.
