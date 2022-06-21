@@ -20,10 +20,10 @@ import java.util.List;
 @Component // constructor in com.techelevator.tenmo.controller.TenmoController required a bean of type 'com.techelevator.tenmo.dao.TransferDao' that could not be found.
 public class JdbcTransferDao implements TransferDao {
 
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    private AccountDao accountDao;
+    private final AccountDao accountDao;
 
     public JdbcTransferDao(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
@@ -145,8 +145,6 @@ public class JdbcTransferDao implements TransferDao {
         }
         return false;
     }
-
-
     private Transfer mapRowToTransfer(SqlRowSet rowSet) {
         Transfer transfer = new Transfer();
         transfer.setTransferId(rowSet.getLong("transfer_id"));
@@ -155,8 +153,6 @@ public class JdbcTransferDao implements TransferDao {
         transfer.setAmount(rowSet.getBigDecimal("amount"));
         transfer.setTransferTypeDesc(rowSet.getString("transfer_type_desc"));
         transfer.setTransferStatusDesc(rowSet.getString("transfer_status_desc"));
-
         return transfer;
-
     }
 }

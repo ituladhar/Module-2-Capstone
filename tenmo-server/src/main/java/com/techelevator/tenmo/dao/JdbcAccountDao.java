@@ -11,7 +11,7 @@ import javax.sql.DataSource;
 @Component // Fixed:required a bean of type 'com.techelevator.tenmo.dao.AccountDao' that could not be found.
 public class JdbcAccountDao implements AccountDao {
 
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     public JdbcAccountDao(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);

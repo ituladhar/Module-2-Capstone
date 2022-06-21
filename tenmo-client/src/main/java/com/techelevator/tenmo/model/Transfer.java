@@ -3,6 +3,15 @@ package com.techelevator.tenmo.model;
 import java.math.BigDecimal;
 
 public class Transfer {
+    public static final String TEXT_RESET = "\u001B[0m";
+    public static final String TEXT_BLACK = "\u001B[30m";
+    public static final String TEXT_RED = "\u001B[31m";
+    public static final String TEXT_GREEN = "\u001B[32m";
+    public static final String TEXT_YELLOW = "\u001B[33m";
+    public static final String TEXT_BLUE = "\u001B[34m";
+    public static final String TEXT_PURPLE = "\u001B[35m";
+    public static final String TEXT_CYAN = "\u001B[36m";
+    public static final String TEXT_WHITE = "\u001B[37m";
     private long transferId;
     private long transferTypeId;
     private long transferStatusId;
@@ -79,13 +88,15 @@ public class Transfer {
     }
 
     @Override
+
     public String toString() {
-        return "\nId: " + transferId +
-                "\nType: " + transferTypeDesc +
-                "\nStatus: " + transferStatusDesc +
-                "\nFrom: " + accountFrom +
-                "\nTo: " + accountTo +
-                "\nAmount: $" + amount;
+        return  TEXT_BLUE + "\n\t\tId:\t\t "  + TEXT_RESET + transferId +
+                TEXT_YELLOW + "\n\t\tType:\t "  + transferTypeDesc +
+                TEXT_CYAN +"\n\t\tStatus:\t "  + transferStatusDesc +
+                TEXT_GREEN +"\n\t\tFrom:\t "  + TEXT_RESET + accountFrom +
+                TEXT_RED +"\n\t\tTo:\t\t "  + TEXT_RESET + accountTo +
+                TEXT_PURPLE +"\n\t\tAmount:\t " + TEXT_RESET + "$" + amount;
+
     }
 }
 
