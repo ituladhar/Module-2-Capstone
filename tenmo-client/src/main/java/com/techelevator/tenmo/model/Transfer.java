@@ -93,8 +93,8 @@ public class Transfer {
         return  TEXT_BLUE + "\n\n\t\t\t\t\t\tId:\t\t "  + TEXT_RESET + transferId +
                 TEXT_YELLOW + "\n\t\t\t\t\t\tType:\t "  + transferTypeDesc +
                 TEXT_CYAN +"\n\t\t\t\t\t\tStatus:\t "  + transferStatusDesc +
-                TEXT_GREEN +"\n\t\t\t\t\t\tFrom:\t "  + TEXT_RESET + accountFrom +
-                TEXT_RED +"\n\t\t\t\t\t\tTo:\t\t "  + TEXT_RESET + accountTo +
+                TEXT_GREEN +"\n\t\t\t\t\t\tFrom:\t "  + TEXT_RESET + (accountFrom -1000) +
+                TEXT_RED +"\n\t\t\t\t\t\tTo:\t\t "  + TEXT_RESET + (accountTo -1000) +
                 TEXT_PURPLE +"\n\t\t\t\t\t\tAmount:\t " + TEXT_RESET + "$" + amount + "\n\n";
 
     }
